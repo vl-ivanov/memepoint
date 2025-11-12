@@ -75,6 +75,10 @@ module.exports.randomPost = async (req, res) => {
     const postsCount = await Post.estimatedDocumentCount()
     const random = Math.floor(Math.random() * postsCount)
     const post = await Post.findOne().skip(random)
+    if (!post) {
+        res.render('errors/404')
+        return
+    }
     res.redirect(`${post._id}`)
 }
 

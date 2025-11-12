@@ -1,64 +1,26 @@
 module.exports.tags=[
-    "Among Us",
-    "Anime Wallpaper",
-    "Apex Legends",
-    "Ask 9GAG",
-    "Coronavirus",
-    "Countryballs",
-    "Cozy & Comfy",
-    "Crappy Design",
-    "Cyberpunk 2077",
-    "DIY drawing & craft",
-    "Football",
-    "Fashion & Beauty",
-    "Food & Drinks",
-    "Fortnite",
-    "Game of Thrones",
-    "Guy",
-    "History",
-    "Horror",
-    "K-Pop",
-    "Latest News",
-    "LEGO",
-    "Marvel & DC",
-    "Movie & TV",
-    "Music",
-    "NBA",
-    "Sport",
-    "Wallpaper",
-    "Overwatch",
-    "PC Master Race",
-    "Pokemon",
-    "PUBG",
-    "Resident Evil 8",
-    "Satisfying",
-    "Science & Tech",
-    "Star Wars",
-    "Teens Can Relate",
-    "Travel & Photograph",
-    "Warhammer",
-    "Wholesome",
-    "Dark Humor",
-    "Funny",
-    "NSFW",
-    "Girl",
-    "WTF",
-    "Cryptocurrency",
-    "Anime & Manga",
-    "Random",
-    "Animals",
-    "Anime Waifu",
-    "Awesome",
-    "Car",
-    "Comic & Webtoon",
-    "Cosplay",
-    "Gaming",
-    "GIF",
-    "League of Legends",
-    "Meme",
-    "Politics",
-    "Relationship",
-    "Savage",
-    "Video",
-    "Girl Celebrity"
+    // Emotions and Reactions
+    'funny', 'relatable', 'wholesome', 'cringe', 'savage', 'epic', 'cursed', 'blessed',
+    
+    // Popular Formats
+    'reaction', 'template', 'crossover', 'mashup', 'gif', 'video', 'text', 'deep-fried',
+    
+    // Themes
+    'gaming', 'anime', 'movies', 'tv-shows', 'politics', 'sports', 'school', 'work',
+    'relationships', 'pets', 'food', 'music', 'tech', 'science',
+    
+    // Internet Culture
+    'dank', 'shitpost', 'copypasta', 'viral', 'trending', 'classic', 'nostalgia',
+    
+    // Social Media
+    'twitter', 'reddit', 'tiktok', 'instagram', 'facebook', 'youtube',
+    
+    // Specific Meme Types
+    'wojak', 'pepe', 'chad', 'stonks', 'sus', 'poggers', 'rickroll', 'karen',
+    
+    // Content Categories
+    'sfw', 'nsfw', 'dark-humor', 'edgy', 'satire', 'parody', 'meta',
+    
+    // Quality Tags
+    'oc', 'repost', 'high-effort', 'low-effort', 'hd', 'pixelated'
 ]

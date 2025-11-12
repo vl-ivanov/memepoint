@@ -30,17 +30,6 @@ app.use((req, res, next) => {
     next();
 });
 
-mongoose.connect(dbUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-})
-
-const db = mongoose.connection;
-db.on('error', console.log.bind(console, "connection error"))
-db.once('open', () => {
-    console.log("MongoDB connected");
-});
 
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
@@ -91,7 +80,17 @@ app.get("*", (req, res) => {
     res.render('errors/404')
 })
 
-const port = process.env.PORT
-app.listen(port, () => {
-    console.log('Listening on port', port)
-})
+
+mongoose.connect(dbUrl)
+
+const db = mongoose.connection;
+db.on('error', console.log.bind(console, "connection error"))
+db.once('open', () => {
+    console.log("MongoDB connected, ready to serve");
+
+    const port = process.env.PORT || 8030;
+
+    app.listen(port, () => {
+        console.log('Express server listening on port', port)
+    });
+});
