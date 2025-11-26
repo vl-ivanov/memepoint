@@ -1,28 +1,32 @@
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/posts">9Gig</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-link" href="/posts">Posts</a>
-                <a class="nav-link" href="/posts/new">New Post</a>
-                <a class="nav-link" href="/posts/random">Random</a>
-                <% if(currentUser && currentUser.role == ("admin")) { %>
+<nav class="navbar navbar-expand-md fixed-top px-3">
+    <a href="/" class="navbar-brand">My Awesome Meme</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav me-auto">
+            <a class="nav-link" href="/posts">Posts</a>
+            <a class="nav-link" href="/posts/new">New Post</a>
+            <a class="nav-link" href="/posts/random">Random</a>
+            <% if(currentUser && currentUser.role == ("admin")) { %>
                 <a class="nav-link" href="/tags">Add Tag</a>
-                <% } %> 
-            </div>
-            <div class="navbar-nav ml-auto">
-                <% if(!currentUser) { %> 
+            <% } %>
+        </div>
+        <div class="navbar-nav ms-auto">
+            <% if(!currentUser) { %>
                 <a class="nav-link" href="/login">Login</a>
                 <a class="nav-link" href="/register">Register</a>
-                <% } else { %> 
-                <a class="nav-link" href="/profile">Welcome, <%=currentUser.username.toUpperCase() %> </a>
+            <% } else { %>
                 <a class="nav-link" href="/logout">Logout</a>
-                <% } %> 
-            </div>
+            <% } %>
         </div>
+        <form class="d-flex">
+            <div class="input-group">
+                <input type="text" class="form-control" aria-label="Recipient's username" aria-describedby="button-addon2">
+                <button class="btn btn-outline-primary" type="button" id="button-addon2">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
     </div>
 </nav>

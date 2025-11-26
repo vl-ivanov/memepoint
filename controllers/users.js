@@ -12,7 +12,7 @@ module.exports.register = async (req, res, next) => {
     const { email, username, password } = req.body
     const isExists = await User.find({ email: email, username: username })
     if (isExists.length > 0) {
-        console.log(await User.find({ email: email, username: username }))
+        await User.find({ email: email, username: username })
         req.flash('error', 'Username / email already exists')
         return res.redirect('/register')
     }
@@ -41,7 +41,11 @@ module.exports.login = async (req, res) => {
 }
 
 module.exports.logout = (req, res) => {
-    req.logout()
-    req.flash('success', "Successfully logged out, don't forget to comeback :D")
-    res.redirect('/posts')
+    req.logout((err) => {
+        if (err) {
+            return next(err);
+        }
+        req.flash('success', "Successfully logged out, don't forget to comeback :D")
+        res.redirect('/posts')
+    });
 }

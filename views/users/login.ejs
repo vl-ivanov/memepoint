@@ -1,8 +1,8 @@
 <% layout('layout/boilerplate')%>
 
-<div class="container d-flex justify-content-center align-items-center mt-5">
+<div class="container d-flex justify-content-center align-items-center h-100">
     <div class="row">
-        <div class="col-md-6 offset-md-3 col-xl-4 offset-xl-4">
+        <div class="col-12">
             <div class="card shadow">
                 <div class="card-body">
                     <h5 class="card-title text-center">Login</h5>
@@ -28,11 +28,11 @@
                                 Password can't be blank
                             </div>
                         </div>
-                        <button class="btn btn-success btn-block">Login</button>
-                        <a class="btn btn-block text-light" id="btn-login-google" href="/auth/google">
+                        <button class="btn btn-success w-100">Login</button>
+                        <a class="btn w-100 text-light my-2" id="btn-login-google" href="/auth/google">
                             <i class="fab fa-google"></i> Login with Google
                         </a>
-                        <a class="btn btn-block text-light" id="btn-login-fb">
+                        <a class="btn w-100 text-light" id="btn-login-fb">
                             <i class="fab fa-facebook-f"></i> Login with Facebook
                         </a>
                     </form>

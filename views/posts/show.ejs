@@ -1,26 +1,26 @@
 <% layout('layout/boilerplate') %>
 
 <%- include('../partials/panel-left')%>
-<div class="mx-auto" id="posts">
+<div class="col-md-6">
     <div class="card mb-3">
         <div class="row ">
             <div class="col">
                 <div class="card-body">
-                    <% for(let tag of post.tags) { %> 
+                    <% for(let tag of post.tags) { %>
                         <a href="<%=tag.url%> "><div class="btn btn-dark btn-sm tags"><%=tag.body%></div></a>
-                    <% } %> 
+                    <% } %>
                     <h5 class="card-title mb-3">
                         <b><%= post.title %></b>
                     </h5>
                     <div id="postCarousel" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner mb-3">
-                            <% post.images.forEach((img, i) => { %> 
+                            <% post.images.forEach((img, i) => { %>
                             <div class="carousel-item <%= i === 0 ? 'active' : '' %> border border-secondary">
                                 <img src="<%=img.url%>" class="d-block w-100" alt="...">
                             </div>
                             <% }) %>
                         </div>
-                        <% if(post.images.length > 1) { %> 
+                        <% if(post.images.length > 1) { %>
                             <a class="carousel-control-prev" href="#postCarousel" role="button" data-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                 <span class="sr-only">Previous</span>
@@ -29,7 +29,7 @@
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                 <span class="sr-only">Next</span>
                             </a>
-                        <% } %> 
+                        <% } %>
                     </div>
                     <% if(currentUser) { %>
                         <%  if(post.upvote.includes(currUser._id)) { %>
@@ -43,7 +43,7 @@
                                     <span class="downvote-value" id="<%=post._id%>downspan"><%=post.downvoteNum%></span>
                                 </button>
                             </form>
-                        <% } else if(post.downvote.includes(currUser._id)) { %> 
+                        <% } else if(post.downvote.includes(currUser._id)) { %>
                             <form class="upvote-form d-inline" data-id="<%=post._id%>">
                                 <button class="btn btn-secondary btn-upvote" type="submit" id="<%=post._id%>upbtn">&#10224;
                                     <span class="upvote-value" id="<%=post._id%>upspan"><%=post.upvoteNum%></span>
@@ -65,8 +65,8 @@
                                     <span class="downvote-value" id="<%=post._id%>downspan"><%=post.downvoteNum%></span>
                                 </button>
                             </form>
-                        <% } %> 
-                    <% } else { %> 
+                        <% } %>
+                    <% } else { %>
                         <form class="upvote-form d-inline" data-id="<%=post._id%>" data-toggle="tooltip" data-placement="bottom" title="gotta login to vote">
                             <button class="btn btn-secondary btn-upvote disabled" type="submit">&#10224;
                                 <span class="upvote-value" ><%=post.upvoteNum%></span>
@@ -78,19 +78,19 @@
                             </button>
                         </form>
                     <% } %>
-                    <% if(currentUser && currentUser._id.equals(post.author._id)) { %> 
+                    <% if(currentUser && currentUser._id.equals(post.author._id)) { %>
                     <a class="card-link btn btn-info" style="color: white;"
                         href="/posts/<%=post._id%>/edit">Edit</a>
                     <form class="d-inline" action="/posts/<%=post._id%>?_method=DELETE" method="POST">
                         <button class="btn btn-danger">Delete</button>
                     </form>
-                    <% } %> 
+                    <% } %>
                 </div>
             </div>
         </div>
         <ul class="list-group list-group-flush">
             <li class="list-group-item">Posted at: <%=moment(post.createdAt).format('MMMM Do YYYY')%></li>
-            <li class="list-group-item">OP: 
+            <li class="list-group-item">OP:
                 <a href="/users/<%=post.author._id%>" class="text-decoration-none text-dark">
                     <b>@<%=post.author.username%></b>
                 </a>
@@ -134,16 +134,16 @@
                         </a>
                             <% if(comment.author._id.equals(post.author._id)) { %>
                                 <b>(OP)</b>
-                            <% } %> 
+                            <% } %>
                     </h5>
                     <p class="card-text">
                         <%= comment.body %>
                     </p>
-                    <% if(currentUser && currentUser._id.equals(comment.author._id)) { %> 
+                    <% if(currentUser && currentUser._id.equals(comment.author._id)) { %>
                     <form class="d-inline" action="/posts/<%=post._id%>/comments/<%=comment._id%>?_method=DELETE" method="POST">
                         <button class="btn btn-danger">Delete comment</button>
                     </form>
-                    <% } %> 
+                    <% } %>
                 </div>
                 <% } %>
             </div>

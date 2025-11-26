@@ -1,20 +1,26 @@
-<div class="col panel vh-100 fixed-panel" id="panel-left">
-    <div class="container">
-        <div class="card w-100">
-            <ul class="card-body">
-                <div class="mb-5">
-                    <b class="card-title">Popular</b>
-                    <% for(let pt of popularTags) { %> 
-                        <li><a href="/<%=pt.url%>" class="tags"><%=pt.body%></a></li>
-                    <% } %> 
-                </div>
-                <div class="mb-5">
-                    <b class="card-title">All Sections</b>
-                    <% for(let tag of tags) { %> 
-                        <li><a href="/<%=tag.url%>" class="tags"><%=tag.body%></a></li>
-                    <% } %> 
-                </div>
+<div class="col-md-3">
+    <div class="card gedf-card">
+        <div class="card-body">
+            <h5 class="card-title">Popular</h5>
+            <p class="card-text">
+            <ul>
+                <% for(let pt of popularTags) { %>
+                    <li><a href="/<%= pt.url %>"><%= pt.body %></a></li>
+                <% } %>
             </ul>
+            </p>
+        </div>
+    </div>
+    <div class="card gedf-card">
+        <div class="card-body">
+            <h5 class="card-title">All Sections</h5>
+            <p class="card-text">
+            <ul>
+                <% for(let tag of tags) { %>
+                    <li><a href="/<%= tag.url %>" class="tags"><%= tag.body %></a></li>
+                <% } %>
+            </ul>
+            </p>
         </div>
     </div>
 </div>

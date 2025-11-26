@@ -8,12 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@stz184/connect-flash':
+        specifier: ^1.0.2
+        version: 1.0.2
       cloudinary:
         specifier: ^2.8.0
         version: 2.8.0
-      connect-flash:
-        specifier: ^0.1.1
-        version: 0.1.1
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7
@@ -67,6 +67,10 @@ packages:
 
   '@mongodb-js/saslprep@1.3.2':
     resolution: {integrity: sha512-QgA5AySqB27cGTXBFmnpifAi7HxoGUeezwo6p9dI03MuDB6Pp33zgclqVb6oVK3j6I9Vesg0+oojW2XxB59SGg==}
+
+  '@stz184/connect-flash@1.0.2':
+    resolution: {integrity: sha512-j1KnqJkEJFdbVLRUUx4Je7UTmYwR3bcCDZP6HLKuVyMXKw40DN0mtLqr8zKJ/LlHwfx8vK6vr+54B+068L3PjA==}
+    engines: {node: '>=18.0.0'}
 
   '@types/webidl-conversions@7.0.3':
     resolution: {integrity: sha512-CiJJvcRtIgzadHCYXw7dqEnMNRjhGZlYK05Mj9OyktqV8uVT8fD2BFOB7S1uwBE3Kj2Z+4UyPmFw/Ixgw/LAlA==}
@@ -152,10 +156,6 @@ packages:
   concat-stream@2.0.0:
     resolution: {integrity: sha512-MWufYdFw53ccGjCA+Ol7XJYpAlW6/prSMzuPOTRnJGcGzuhLn4Scrz7qf6o8bROZ514ltazcIFJZevcfbo0x7A==}
     engines: {'0': node >= 6.0}
-
-  connect-flash@0.1.1:
-    resolution: {integrity: sha512-2rcfELQt/ZMP+SM/pG8PyhJRaLKp+6Hk2IUBNkEit09X+vwn3QsAL3ZbYtxUn7NVPzbMTSLRDhqe0B/eh30RYA==}
-    engines: {node: '>= 0.4.0'}
 
   content-disposition@0.5.4:
     resolution: {integrity: sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ==}
@@ -667,6 +667,8 @@ snapshots:
     dependencies:
       sparse-bitfield: 3.0.3
 
+  '@stz184/connect-flash@1.0.2': {}
+
   '@types/webidl-conversions@7.0.3': {}
 
   '@types/whatwg-url@11.0.5':
@@ -762,8 +764,6 @@ snapshots:
       inherits: 2.0.4
       readable-stream: 3.6.2
       typedarray: 0.0.6
-
-  connect-flash@0.1.1: {}
 
   content-disposition@0.5.4:
     dependencies:

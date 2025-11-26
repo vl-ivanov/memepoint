@@ -1,25 +1,24 @@
-<div class="col panel vh-100 fixed-panel" id="panel-right">
-    <div class="container">
-        <div class="card w-100">
-            <ul class="card-body">
-                <div class="mb-5">
-                    <b class="card-title">Advertisement</b>
-                    <li><a href="https://play.google.com/">Download our app</a></li>
-                </div>
-                <div class="mb-5">
-                    <b class="card-title">Featured Posts</b>
-                    <li><a href="#">Post #1</a></li>
-                    <li><a href="#">Post #2</a></li>
-                    <li><a href="#">Post #3</a></li>
-                    <li><a href="#">Post #4</a></li>
-                    <li><a href="#">Post #5</a></li>
-                    <li><a href="#">Post #6</a></li>
-                    <li><a href="#">Post #7</a></li>
-                    <li><a href="#">Post #8</a></li>
-                    <li><a href="#">Post #9</a></li>
-                    <li><a href="#">Post #10</a></li>
-                </div
-            </ul>
+<div class="col-md-3">
+    <!-- Profile picture card-->
+    <div class="card mb-4 mb-xl-0">
+        <div class="card-header">Profile</div>
+        <div class="card-body text-center">
+            <!-- Profile picture image-->
+
+            <img class="img-account-profile rounded-circle mb-2" src="<%= gravatar %>" alt="Gravatar">
+            <!-- Profile picture help block-->
+            <div class="small font-italic text-muted mb-4">
+                <% if(!currentUser) { %>
+                    <a class="btn btn-primary" href="/login">Login</a>
+                    <br />
+                    <small>Don't have an account? <a href="/register">Register</a></small>
+                <% } else { %>
+                    <a href="/profile">Welcome, <%=currentUser.username.toUpperCase() %></a><br />
+                    <a class="btn btn-primary" href="/logout">Logout</a>
+                <% } %>
+            </div>
+            <!-- Profile picture upload button-->
+
         </div>
     </div>
 </div>

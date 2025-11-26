@@ -26,10 +26,17 @@
 
             <div class="mb-3">
                 <div class="tag">
-                    <b><div class="card-title">Add Tags For Your Post</div></b>
-                    <% for(let tag of tags) { %> 
-                        <input type="checkbox" name="post[tags]" id="<%=tag._id%>" value="<%=tag._id%>" class="btn btn-outline-dark btn-sm mb-1 tags tag-form" autocomplete="off">
-                        <label class="btn btn-sm mb-1 tags btn-outline-dark" for="<%=tag._id%>" ><%=tag.body%></label>
+                    <b><div class="card-title">Add some tags to your post</div></b>
+                    <% for(let group of tags) { %>
+                        <fieldset class="mb-3">
+                            <legend><%=group._id%></legend>
+                            <div class="m-3">
+                            <% for(let tag of group.tags) { %>
+                                <input type="checkbox" name="post[tags]" id="<%=tag._id%>" value="<%=tag._id%>" class="btn btn-outline-dark btn-sm mb-1 tags tag-form" autocomplete="off">
+                                <label class="btn btn-sm mb-1 tags btn-outline-dark" for="<%=tag._id%>" ><%=tag.body%></label>
+                            <% } %>
+                            </div>
+                        </fieldset>
                     <% } %>
                 </div>
                 <div class="tag-invalid-feedback" id="empty-tag">
