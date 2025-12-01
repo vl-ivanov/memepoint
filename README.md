@@ -15,10 +15,6 @@ Create a .env file in the root directory and add the following code
 ```
 PORT=8080
 DB_URL=**********
-CLOUDINARY_CLOUD_NAME=**********
-CLOUDINARY_KEY=**********
-CLOUDINARY_SECRET=**********
-SECRET=**********
 GOOGLE_CLIENT_ID=**********
 GOOGLE_CLIENT_SECRET=**********
 ```

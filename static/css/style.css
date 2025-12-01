@@ -17,6 +17,16 @@ body.page-register main #content-wrapper > .row {
     height: 100%;
 }
 
+.btn-primary {
+    background-color: #7952b3 !important;
+    border-color: #7952b3 !important;
+}
+
+.btn-primary:hover {
+    background-color: #6c459b !important;
+    border-color: #6c459b !important;
+}
+
 fieldset {
     background-color: white;
     margin: 0;

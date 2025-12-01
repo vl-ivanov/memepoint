@@ -1,4 +1,4 @@
-if (process.env.NODE_ENV !== "production") require("dotenv").config();
+require("dotenv").config();
 
 const express = require("express");
 const app = express();
@@ -64,10 +64,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "static")));
 
-const SECRET =
-  process.env.CLOUDINARY_SECRET || "thiscantbeagoodsecrettoaccess9Gig";
+const SESSION_SECRET = process.env.SESSION_SECRET;
+if (!SESSION_SECRET) throw new Error("SESSION_SECRET is not defined");
+
 const sessionConfig = {
-  secret: SECRET,
+  secret: SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   cookie: {

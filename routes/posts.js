@@ -3,8 +3,8 @@ const router = express.Router();
 const posts = require("../controllers/posts");
 const { isLoggedIn } = require("../middleware");
 const multer = require("multer");
-const { storage } = require("../cloudinary/index");
-const upload = multer({ storage });
+const b2storage = require("../backblaze-b2/index");
+const upload = multer({ storage: b2storage() });
 
 router
   .route("/")

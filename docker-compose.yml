@@ -5,6 +5,7 @@ services:
       target: prod
     ports:
       - "${APP_PORT}:8030"
+    env_file: .env
     depends_on:
       - mongo
 

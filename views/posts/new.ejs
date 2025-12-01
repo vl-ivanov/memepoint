@@ -4,51 +4,56 @@
     <div class="col-6 offset-3">
         <form action="/posts" method="POST" novalidate class="form-validation" id="create-form" enctype="multipart/form-data">
             <div class="mb-3">
-                <label class="form-label" for="title"><b>Title</b></label>
-                <input class="form-control" type="text" id="title" name="post[title]" required>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
-                <div class="invalid-feedback">
-                    Gotta add some title
-                </div>
+                <fieldset class="mb-3">
+                    <legend><label class="m-0" for="title">Title</label></legend>
+                    <div class="m-3">
+                        <input class="form-control" type="text" id="title" name="post[title]" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            Gotta add some title
+                        </div>
+                    </div>
+                </fieldset>
             </div>
 
             <div class="mb-3">
-                <input type="file" name="image" id="image" multiple required>
-                <div class="valid-feedback">
-                    Looks good!
-                </div>
-                <div class="invalid-feedback">
-                    Input some memes
-                </div>
+                <fieldset class="mb-3">
+                    <legend><label class="m-0" for="image">Input some memes</label></legend>
+                    <div class="m-3">
+                        <input class="form-control form-control-lg" type="file" id="image" name="image" required>
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                        <div class="invalid-feedback">
+                            Gotta add some image
+                        </div>
+                    </div>
+                </fieldset>
             </div>
 
             <div class="mb-3">
                 <div class="tag">
-                    <b><div class="card-title">Add some tags to your post</div></b>
-                    <% for(let group of tags) { %>
-                        <fieldset class="mb-3">
-                            <legend><%=group._id%></legend>
-                            <div class="m-3">
-                            <% for(let tag of group.tags) { %>
-                                <input type="checkbox" name="post[tags]" id="<%=tag._id%>" value="<%=tag._id%>" class="btn btn-outline-dark btn-sm mb-1 tags tag-form" autocomplete="off">
-                                <label class="btn btn-sm mb-1 tags btn-outline-dark" for="<%=tag._id%>" ><%=tag.body%></label>
-                            <% } %>
+                    <fieldset class="mb-3">
+                        <legend><label class="m-0" for="tags">Add some tags to your post</label></legend>
+                        <div class="m-3">
+                            <select name="post[tag]" class="form-control" id="post-tags" multiple="multiple" required>
+                            </select>
+                            <div class="valid-feedback">
+                                Looks good!
                             </div>
-                        </fieldset>
-                    <% } %>
-                </div>
-                <div class="tag-invalid-feedback" id="empty-tag">
-                    Must choose at least 1 tag
-                </div>
-                <div class="tag-invalid-feedback" id="max-tag">
-                    You have reach maximum tag
+                            <div class="invalid-feedback">
+                                Gotta add some tags
+                            </div>
+                        </div>
+                    </fieldset>
+
                 </div>
             </div>
 
             <div class="mb-3">
-                <button class="btn btn-success">Create Post</button>
+                <button class="btn btn-primary btn-lg">Create Post</button>
             </div>
         </form>
     </div>

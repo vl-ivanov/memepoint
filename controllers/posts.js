@@ -1,6 +1,6 @@
 const Post = require("../models/post");
 const Tag = require("../models/tag");
-const { cloudinary } = require("../cloudinary");
+const backblaze = require("../backblaze-b2");
 
 let seenIds = [];
 module.exports.index = async (req, res) => {
@@ -51,7 +51,11 @@ module.exports.renderNewForm = async (req, res) => {
 
 module.exports.createPost = async (req, res) => {
   const post = new Post(req.body.post);
-  post.images = req.files.map((f) => ({ url: f.path, filename: f.filename }));
+  post.images = req.files.map((f) => ({
+    url: f.path,
+    filename: f.filename,
+    fileId: f.fileId,
+  }));
   post.author = req.user._id;
   post.upvote = [];
   post.upvoteNum = 0;
@@ -140,7 +144,7 @@ module.exports.deletePost = async (req, res) => {
       await tag.save();
     }
     for (let image of post.images) {
-      await cloudinary.uploader.destroy(image.filename);
+      await backblaze().destroy(image.fileId, image.filename);
     }
     await Post.findByIdAndDelete(req.params.id);
     req.flash("success", "Post deleted!");
