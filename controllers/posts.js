@@ -52,7 +52,7 @@ module.exports.renderNewForm = async (req, res) => {
 module.exports.createPost = async (req, res) => {
   const post = new Post(req.body.post);
   post.images = req.files.map((f) => ({
-    url: f.path,
+    url: f.publicUrl,
     filename: f.filename,
     fileId: f.fileId,
   }));

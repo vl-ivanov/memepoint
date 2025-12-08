@@ -11,8 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@stz184/backblaze-b2": "^2.0.3",
     "@stz184/connect-flash": "^1.0.2",
-    "backblaze-b2": "^1.7.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.6.1",
     "ejs": "^3.1.10",

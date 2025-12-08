@@ -1,5 +1,5 @@
 var fs = require("fs");
-const B2 = require("backblaze-b2");
+const B2 = require("@stz184/backblaze-b2");
 
 const b2 = new B2({
   applicationKeyId: process.env.B2_APPLICATION_KEY_ID,
@@ -65,7 +65,13 @@ BackblazeStorage.prototype.b2UploadFile = async function (
     // Optional: onUploadProgress: (event) => { /* handle progress */ },
   });
 
-  return uploadResponse;
+  // Construct public URL
+  const publicUrl = `https://f002.backblazeb2.com/file/${bucketName}/${uploadResponse.data.fileName}`;
+  return {
+    fileId: uploadResponse.data.fileId,
+    size: uploadResponse.data.contentLength,
+    publicUrl: publicUrl,
+  };
 };
 
 BackblazeStorage.prototype._handleFile = async function (req, file, cb) {
@@ -81,10 +87,7 @@ BackblazeStorage.prototype._handleFile = async function (req, file, cb) {
 
   console.log("File uploaded successfully:", uploadResponse.data);
 
-  cb(null, {
-    fileId: uploadResponse.data.fileId,
-    size: uploadResponse.data.contentLength,
-  });
+  cb(null, uploadResponse);
 };
 
 BackblazeStorage.prototype._removeFile = function _removeFile(req, file, cb) {
