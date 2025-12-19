@@ -4,48 +4,28 @@ const Comment = require("./comment");
 
 const ImageSchema = new Schema({
   url: String,
-  filename: String,
+  fileName: String,
   fileId: String,
 });
 
 const PostSchema = new Schema({
   title: String,
   images: [ImageSchema],
-  upvote: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
-  upvoteNum: Number,
-  downvote: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
-  downvoteNum: Number,
   author: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  comments: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Comment",
-    },
-  ],
-  tags: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Tag",
-    },
-  ],
+  tags: [String], // ← Changed to array of strings!
+  upvote: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  downvote: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  upvoteNum: Number,
+  downvoteNum: Number,
+  comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
+  createdAt: { type: Date, default: Date.now },
 });
+
+// Add index for efficient tag queries
+PostSchema.index({ tags: 1 });
 
 //middleware for delete all comments when deleting a post
 PostSchema.post("findOneAndDelete", async (post) => {

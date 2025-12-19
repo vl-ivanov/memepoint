@@ -1,6 +1,7 @@
 const Post = require("../models/post");
 const Tag = require("../models/tag");
 const backblaze = require("../backblaze-b2");
+const { getPublicUrl } = require("../backblaze-b2/helper");
 
 let seenIds = [];
 module.exports.index = async (req, res) => {
@@ -10,6 +11,15 @@ module.exports.index = async (req, res) => {
     .sort({ createdAt: "desc" })
     .populate("tags")
     .limit(3);
+
+  posts.forEach((post) => {
+    post.images = post.images.map((image) => {
+      return {
+        url: getPublicUrl(image.fileName),
+      };
+    });
+  });
+
   posts.forEach((p) => {
     seenIds.push(p._id);
   });
@@ -52,8 +62,7 @@ module.exports.renderNewForm = async (req, res) => {
 module.exports.createPost = async (req, res) => {
   const post = new Post(req.body.post);
   post.images = req.files.map((f) => ({
-    url: f.publicUrl,
-    filename: f.filename,
+    fileName: f.fileName,
     fileId: f.fileId,
   }));
   post.author = req.user._id;
@@ -61,14 +70,38 @@ module.exports.createPost = async (req, res) => {
   post.upvoteNum = 0;
   post.downvote = [];
   post.downvoteNum = 0;
+
+  // Normalize tags: trim, lowercase, remove duplicates
+  let tags = req.body?.post?.tags;
+  if (typeof tags === "string") {
+    tags = [tags];
+  }
+
+  if (Array.isArray(tags) && tags.length > 0) {
+    tags = tags.map((t) => t.trim().toLowerCase());
+  } else {
+    req.flash("error", "Invalid tags format");
+    res.redirect("/posts/new");
+    return;
+  }
+
+  tags = [...new Set(tags)]; // Remove duplicates
+  post.tags = tags;
+
   await post.save();
 
-  const tags = req.body.post.tags;
-  for (let tag_id of tags) {
-    let tag = await Tag.findById(tag_id);
-    tag.countNum++;
-    await tag.save();
+  // Update Tag collection for statistics/autocomplete
+  for (let tagName of tags) {
+    await Tag.findOneAndUpdate(
+      { name: tagName },
+      {
+        $inc: { countNum: 1 },
+        $setOnInsert: { displayName: tagName }, // Store first occurrence
+      },
+      { upsert: true }, // Create if doesn't exist
+    );
   }
+
   req.flash("success", "Post created!");
   res.redirect(`/posts/${post._id}`);
 };
@@ -76,24 +109,29 @@ module.exports.createPost = async (req, res) => {
 module.exports.showPost = async (req, res) => {
   const tags = await Tag.find({}).sort({ body: "asc" });
   try {
-    let post = await Post.findById(req.params.id || post._id);
+    let post = await Post.findById(req.params.id || post._id)
+      .populate("tags")
+      .populate("author")
+      .populate({
+        path: "comments",
+        populate: {
+          path: "author",
+        },
+      });
     if (!post) {
       res.render("errors/404");
     } else {
       const currUser = req.user;
-      post = await Post.findById(req.params.id || post._id)
-        .populate("tags")
-        .populate("author")
-        .populate({
-          path: "comments",
-          populate: {
-            path: "author",
-          },
-        });
       const popularTags = await Tag.find({})
         .sort({ countNum: "desc" })
         .limit(15)
         .sort({ body: "asc" });
+
+      post.images = post.images.map((image) => {
+        return {
+          url: getPublicUrl(image.fileName),
+        };
+      });
       res.render("posts/show", { post, tags, popularTags, currUser });
     }
   } catch (e) {

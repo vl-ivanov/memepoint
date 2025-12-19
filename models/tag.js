@@ -2,17 +2,18 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const TagSchema = new Schema({
-  body: String,
-  category: String,
-  url: String,
-  usedBy: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
+  name: {
+    type: String,
+    unique: true,
+    lowercase: true, // Normalize tags
+    trim: true,
   },
-  countNum: {
-    type: Number,
-    default: 0,
-  },
+  displayName: String, // Keep original case for display
+  countNum: { type: Number, default: 0 },
+  category: String, // Optional: for grouping
+  createdAt: { type: Date, default: Date.now },
 });
+
+TagSchema.index({ countNum: -1 }); // For popular tags
 
 module.exports = mongoose.model("Tag", TagSchema);

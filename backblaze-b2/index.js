@@ -1,14 +1,13 @@
-var fs = require("fs");
+const fs = require("fs");
+const path = require("path");
+const appRoot = path.dirname(require.main.filename);
 const B2 = require("@stz184/backblaze-b2");
+const sharp = require("sharp");
 
 const b2 = new B2({
   applicationKeyId: process.env.B2_APPLICATION_KEY_ID,
   applicationKey: process.env.B2_APPLICATION_KEY,
 });
-
-// Source - https://stackoverflow.com/a/65793537
-// Posted by Slimani
-// Retrieved 2025-11-29, License - CC BY-SA 4.0
 
 async function streamToBuffer(stream) {
   return new Promise((resolve, reject) => {
@@ -66,11 +65,10 @@ BackblazeStorage.prototype.b2UploadFile = async function (
   });
 
   // Construct public URL
-  const publicUrl = `https://f002.backblazeb2.com/file/${bucketName}/${uploadResponse.data.fileName}`;
   return {
     fileId: uploadResponse.data.fileId,
+    fileName: uploadResponse.data.fileName,
     size: uploadResponse.data.contentLength,
-    publicUrl: publicUrl,
   };
 };
 
@@ -78,14 +76,28 @@ BackblazeStorage.prototype._handleFile = async function (req, file, cb) {
   const fileBuffer = await streamToBuffer(file.stream);
   const fileName = file.originalname;
   const mimeType = file.mimetype;
+  const rand = Math.random().toString(36).substring(2, 15);
+
+  // Save temporary file
+  const randFileName = `${rand}.${fileName.split(".")[0]}.webp`;
+  const tempFilePath = path.join(appRoot, "tmp", randFileName);
+  await fs.promises.writeFile(tempFilePath, fileBuffer);
+
+  // Resize image if necessary
+  if (!mimeType.startsWith("image/")) {
+    await fs.promises.unlink(tempFilePath);
+    cb(null, null);
+    return;
+  }
+
+  const resizedBuffer = await sharp(tempFilePath).resize(800).toBuffer();
+  await fs.promises.unlink(tempFilePath);
 
   const uploadResponse = await this.b2UploadFile(
-    fileBuffer,
-    fileName,
+    resizedBuffer,
+    randFileName,
     mimeType,
   );
-
-  console.log("File uploaded successfully:", uploadResponse.data);
 
   cb(null, uploadResponse);
 };
