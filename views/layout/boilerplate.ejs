@@ -18,13 +18,13 @@
 <body class="d-flex flex-column ustify-content-center h-100 <%- page -%>">
     <%- include('../partials/navbar') %>
         <main class="container-fluid">
-            <div class="row" id="content-wrapper">
+            <div class="row px-3" id="content-wrapper">
                 <div class="col-md-12">
                     <%- include('../partials/flash')%>
                 </div>
-
-                <%- body -%>
-
+                <div class="row d-flex justify-content-center align-items-start flex-lg-row flex-md-row flex-sm-column">
+                    <%- body -%>
+                </div>
             </div>
         </main>
     <%- include('../partials/footer') %>
