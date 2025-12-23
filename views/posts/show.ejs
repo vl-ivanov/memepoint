@@ -8,7 +8,7 @@
             <div class="col">
                 <div class="card-body">
                     <% post.tags.forEach((tag) => { %>
-                        <a href="<%=tag%> "><div class="btn btn-dark btn-sm tags"><%=tag%></div></a>
+                        <a href="/posts/tagged/<%=encodeURIComponent(tag)%> "><div class="btn btn-dark btn-sm tags"><%=tag%></div></a>
                     <% }) %>
                     <h5 class="card-title mb-3">
                         <b><%= post.title %></b>

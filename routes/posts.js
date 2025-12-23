@@ -19,6 +19,8 @@ router.get("/more", posts.getMorePosts);
 
 router.get("/:id/edit", isLoggedIn, posts.renderEditForm);
 
+router.get("/tagged/:tag", posts.taggedPosts);
+
 router
   .route("/:id")
   .get(posts.showPost)
