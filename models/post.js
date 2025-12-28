@@ -1,11 +1,14 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Comment = require("./comment");
-const { getPublicUrl } = require("../backblaze-b2/helper");
+const { getPublicUrl } = require("../helpers/backblaze-b2/helper");
 
 const ImageSchema = new Schema({
   fileName: String,
   fileId: String,
+  size: Number,
+  width: Number,
+  height: Number,
 });
 
 ImageSchema.virtual("url").get(function () {

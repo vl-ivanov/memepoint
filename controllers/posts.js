@@ -1,7 +1,7 @@
 const Post = require("../models/post");
 const Tag = require("../models/tag");
-const backblaze = require("../backblaze-b2");
-const { getPublicUrl } = require("../backblaze-b2/helper");
+const backblaze = require("../helpers/backblaze-b2");
+const { getPublicUrl } = require("../helpers/backblaze-b2/helper");
 
 async function getPopularTags() {
   return await Tag.find({})
@@ -10,32 +10,26 @@ async function getPopularTags() {
     .sort({ body: "asc" });
 }
 
-let seenIds = [];
+let page = 1;
 module.exports.index = async (req, res) => {
-  seenIds = [];
-  const posts = await Post.find({ _id: { $nin: seenIds } })
+  const posts = await Post.find({})
     .sort()
     .sort({ createdAt: "desc" })
     .populate("tags")
-    .limit(3);
+    .limit(10);
 
-  posts.forEach((p) => {
-    seenIds.push(p._id);
-  });
   const popularTags = await getPopularTags();
   const currUser = req.user;
   res.render("posts/index", { posts, popularTags, currUser });
 };
 
 module.exports.getMorePosts = async (req, res) => {
-  const posts = await Post.find({ _id: { $nin: seenIds } })
+  const posts = await Post.find()
     .sort()
     .sort({ createdAt: "desc" })
     .populate("tags")
     .limit(3);
-  posts.forEach((p) => {
-    seenIds.push(p._id);
-  });
+
   const currUser = req.user;
   res.send({ posts, currUser });
 };
@@ -59,6 +53,9 @@ module.exports.createPost = async (req, res) => {
   post.images = req.files.map((f) => ({
     fileName: f.fileName,
     fileId: f.fileId,
+    size: f.size,
+    width: f.width,
+    height: f.height,
   }));
   post.author = req.user._id;
   post.upvote = [];
