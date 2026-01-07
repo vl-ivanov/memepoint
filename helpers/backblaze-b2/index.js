@@ -26,8 +26,7 @@ BackblazeStorage.prototype._handleFile = async function (req, file, cb) {
   const rand = Math.random().toString(36).substring(2, 15);
 
   // Save temporary file
-  const randFileName = `${rand}.${fileName.split(".")[0]}`;
-  const tempFilePath = path.join(appRoot, "tmp", randFileName);
+  const tempFilePath = path.join(appRoot, "tmp", `${rand}.${fileName}`);
   await fs.promises.writeFile(tempFilePath, fileBuffer);
 
   // Resize image if necessary
@@ -41,17 +40,25 @@ BackblazeStorage.prototype._handleFile = async function (req, file, cb) {
     fileBuffer: resizedBuffer,
     fileName: resizedFileName,
     mimeType: resizedMimeType,
-  } = await resizeImage(tempFilePath, randFileName, mimeType, 800);
+    width,
+    height,
+    size,
+  } = await resizeImage(tempFilePath, mimeType, 800);
   await fs.promises.unlink(tempFilePath);
 
   const uploadResponse = await uploadFile(
     b2,
     resizedBuffer,
-    randFileName,
+    resizedFileName,
     mimeType,
   );
 
-  cb(null, uploadResponse);
+  cb(null, {
+    ...uploadResponse,
+    width,
+    height,
+    size,
+  });
 };
 
 BackblazeStorage.prototype._removeFile = function _removeFile(req, file, cb) {

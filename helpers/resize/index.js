@@ -1,7 +1,12 @@
 const fs = require("fs");
+const path = require("path");
 const sharp = require("sharp");
 
-async function resizeImage(filePath, newFileName, mimeType, targetWidth) {
+async function resizeImage(filePath, mimeType, targetWidth) {
+  const baseName = path.basename(filePath);
+  const rand = Math.random().toString(36).substring(2, 15);
+  let newFileName = `${rand}.${baseName.split(".")[0]}`;
+
   const { width, height } = await sharp(filePath).metadata();
   if (width <= targetWidth) {
     // check if image is already webp
@@ -16,9 +21,11 @@ async function resizeImage(filePath, newFileName, mimeType, targetWidth) {
       await fs.promises.writeFile(filePath, webpBuffer);
       newFileName += ".webp";
     } else {
-      webpBuffer = fileBuffer;
+      webpBuffer = await fs.promises.readFile(filePath);
       if (isGif) {
         newFileName += ".gif";
+      } else {
+        newFileName += ".webp";
       }
     }
 
@@ -38,6 +45,9 @@ async function resizeImage(filePath, newFileName, mimeType, targetWidth) {
     fileBuffer: resizedBuffer,
     fileName: newFileName,
     mimeType: "image/webp",
+    width: metadata.width,
+    height: metadata.height,
+    size: metadata.size,
   };
 }
 
