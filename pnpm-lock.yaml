@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@stz184/backblaze-b2':
-        specifier: ^2.0.4
-        version: 2.0.4
+        specifier: ^2.0.5
+        version: 2.0.5
       '@stz184/connect-flash':
         specifier: ^1.0.2
         version: 1.0.2
@@ -230,8 +230,8 @@ packages:
   '@mongodb-js/saslprep@1.4.4':
     resolution: {integrity: sha512-p7X/ytJDIdwUfFL/CLOhKgdfJe1Fa8uw9seJYvdOmnP9JBWGWHW69HkOixXS6Wy9yvGf1MbhcS6lVmrhy4jm2g==}
 
-  '@stz184/backblaze-b2@2.0.4':
-    resolution: {integrity: sha512-svHVajXOsZT3ozrNQrEAwN5vLlLqj247lItmeU9QxP6kCkmcg78G05wi+NoXsGFjadeYBanI0sH2BdAw9aYqvQ==}
+  '@stz184/backblaze-b2@2.0.5':
+    resolution: {integrity: sha512-rLE9f4BWPWeB4dedLLuePDOoqVmIq/osVMjalUKzXkf830Nm8hFMGSWwdIgKEO+nMGT7/OT/BASdqkzbA2NpCw==}
     engines: {node: '>=18.0.0'}
 
   '@stz184/connect-flash@1.0.2':
@@ -982,7 +982,7 @@ snapshots:
     dependencies:
       sparse-bitfield: 3.0.3
 
-  '@stz184/backblaze-b2@2.0.4':
+  '@stz184/backblaze-b2@2.0.5':
     dependencies:
       axios: 1.13.2
       axios-retry: 4.5.0(axios@1.13.2)
