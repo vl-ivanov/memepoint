@@ -9,12 +9,12 @@
             <!-- Profile picture help block-->
             <div class="small font-italic text-muted mb-4">
                 <% if(!currentUser) { %>
-                    <a class="btn btn-primary" href="/login">Login</a>
+                    <a class="btn btn-primary" href="/users/login">Login</a>
                     <br />
                     <small>Don't have an account? <a href="/register">Register</a></small>
                 <% } else { %>
                     <a href="/profile">Welcome, <%=currentUser.username.toUpperCase() %></a><br />
-                    <a class="btn btn-primary" href="/logout">Logout</a>
+                    <a class="btn btn-primary" href="/users/logout">Logout</a>
                 <% } %>
             </div>
             <!-- Profile picture upload button-->

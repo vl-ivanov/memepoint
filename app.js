@@ -52,7 +52,7 @@ app.use((req, res, next) => {
     .toLowerCase();
   res.locals.moment = moment;
   res.locals.page = `page-${currentPage ? currentPage : "index"}`;
-  res.locals.title = process.env.APP_NAME || "9Gig";
+  res.locals.title = process.env.APP_NAME || "My Awesome Meme";
 
   next();
 });
@@ -97,10 +97,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/", userRoutes);
-app.use("/posts", postRoutes);
+app.use("/", postRoutes);
 app.use("/posts/:id/comments", commentRoutes);
 app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
 app.use("/tags", tagRoutes);
 
 app.get("/", (req, res) => {

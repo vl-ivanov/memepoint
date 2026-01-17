@@ -6,28 +6,27 @@ const multer = require("multer");
 const b2storage = require("../helpers/backblaze-b2/index");
 const upload = multer({ storage: b2storage() });
 
+router.route("/").get(posts.index);
+
+router.post("/posts", isLoggedIn, upload.array("image"), posts.createPost);
+
+router.get("/posts/new", isLoggedIn, posts.renderNewForm);
+
+router.get("/posts/random", posts.randomPost);
+
+router.get("/posts/more", posts.getMorePosts);
+
+router.get("/posts/:id/edit", isLoggedIn, posts.renderEditForm);
+
+router.get("/posts/tagged/:tag", posts.taggedPosts);
+
 router
-  .route("/")
-  .get(posts.index)
-  .post(isLoggedIn, upload.array("image"), posts.createPost);
-
-router.get("/new", isLoggedIn, posts.renderNewForm);
-
-router.get("/random", posts.randomPost);
-
-router.get("/more", posts.getMorePosts);
-
-router.get("/:id/edit", isLoggedIn, posts.renderEditForm);
-
-router.get("/tagged/:tag", posts.taggedPosts);
-
-router
-  .route("/:id")
+  .route("/posts/:id")
   .get(posts.showPost)
   .put(isLoggedIn, posts.updatePost)
   .delete(isLoggedIn, posts.deletePost);
 
-router.put("/:id/vote-up", isLoggedIn, posts.upvotePost);
-router.put("/:id/vote-down", isLoggedIn, posts.downvotePost);
+router.put("/posts/:id/vote-up", isLoggedIn, posts.upvotePost);
+router.put("/posts/:id/vote-down", isLoggedIn, posts.downvotePost);
 
 module.exports = router;

@@ -10,13 +10,21 @@ async function getPopularTags() {
     .sort({ body: "asc" });
 }
 
-let page = 1;
+const pageSize = 10;
+
 module.exports.index = async (req, res) => {
+  let { page } = req.query;
+
+  page = parseInt(page, 10) || 1;
+  if (page > 100) {
+    page = 100;
+  }
+
   const posts = await Post.find({})
     .sort()
     .sort({ createdAt: "desc" })
     .populate("tags")
-    .limit(10);
+    .limit(pageSize * page);
 
   const popularTags = await getPopularTags();
   const currUser = req.user;
@@ -24,14 +32,23 @@ module.exports.index = async (req, res) => {
 };
 
 module.exports.getMorePosts = async (req, res) => {
+  let { page } = req.query;
+
+  page = parseInt(page, 10) || 1;
+
   const posts = await Post.find()
     .sort()
     .sort({ createdAt: "desc" })
     .populate("tags")
-    .limit(3);
+    .skip((page - 1) * pageSize)
+    .limit(pageSize);
+
+  if (!posts.length) {
+    return res.status(404).send("No more posts found");
+  }
 
   const currUser = req.user;
-  res.send({ posts, currUser });
+  res.render("posts/more", { posts, currUser });
 };
 
 module.exports.renderNewForm = async (req, res) => {

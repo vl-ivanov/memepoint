@@ -1,7 +1,7 @@
 <% layout('layout/boilerplate')%>
 
 <%- include('../partials/panel-left')%>
-<div class="col-sm-12 col-md-12 col-lg-6">
+<div class="col-sm-12 col-md-12 col-lg-6" id="posts-container">
     <% for (let post of posts){%>
         <%- include('../partials/post', {post})%>
     <% }%>

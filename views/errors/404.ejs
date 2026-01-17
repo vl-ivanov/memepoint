@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>9Gig - 404 Nothing here</title>
+    <title>My Awesome Meme - 404 Nothing here</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
         integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
@@ -16,24 +16,24 @@
     <div class="cover-container" id="background">
         <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/posts">9Gig</a>
+                <a class="navbar-brand" href="/">My Awesome Meme</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
                     aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
-                        <a class="nav-link" href="/posts">Posts</a>
+                        <a class="nav-link" href="/">Posts</a>
                         <a class="nav-link" href="/posts/new">New Post</a>
                     </div>
                     <div class="navbar-nav ml-auto">
-                        <% if(!currentUser) { %> 
-                        <a class="nav-link" href="/login">Login</a>
-                        <a class="nav-link" href="/register">Register</a>
-                        <% } else { %> 
+                        <% if(!currentUser) { %>
+                        <a class="nav-link" href="/users/login">Login</a>
+                        <a class="nav-link" href="/users/register">Register</a>
+                        <% } else { %>
                         <a class="nav-link" href="/profile">Welcome, <%=currentUser.username.toUpperCase() %> </a>
-                        <a class="nav-link" href="/logout">Logout</a>
-                        <% } %> 
+                        <a class="nav-link" href="/users/logout">Logout</a>
+                        <% } %>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
     <div class="text-center" id="message">
         <h1>404</h1>
         <p class="lead">There's Nothing Here</p>
-        <a href="/posts" class="btn btn-warning">Go Drunk, You Are Home</a>
+        <a href="/" class="btn btn-warning">Go Drunk, You Are Home</a>
     </div>
 </body>
 </body>
