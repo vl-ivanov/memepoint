@@ -17,6 +17,7 @@ module.exports.register = async (req, res, next) => {
     return res.redirect("/register");
   }
   const newUser = new User({ email, username });
+  newUser.role = email === process.env.ADMIN_EMAIL ? "admin" : "user";
   const user = await User.register(newUser, password);
   req.login(user, (err) => {
     if (err) return next(err);
