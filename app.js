@@ -101,7 +101,7 @@ app.use("/", postRoutes);
 app.use("/posts/:id/comments", commentRoutes);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
-app.use("/pages", pageRoutes);
+app.use("/page", pageRoutes);
 
 app.get("/", (req, res) => {
   res.render("home");

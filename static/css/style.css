@@ -5,7 +5,7 @@
 body {
     background-color: #eeeeee;
     padding-top: 4.3rem;
-    padding-bottom: 0;
+    padding-bottom: 4.3rem;
 }
 
 body.page-login main,
@@ -15,6 +15,17 @@ body.page-register main #content-wrapper,
 body.page-login main #content-wrapper > .row,
 body.page-register main #content-wrapper > .row {
     height: 100%;
+}
+
+body > main {
+    height: calc(100% - 50px);
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
 }
 
 .btn-primary {

@@ -7,6 +7,7 @@ module.exports.getPage = async (req, res) => {
   if (!page) {
     res.render("errors/404");
   } else {
+    res.locals.title = page.title;
     res.render("pages/show", { page });
   }
 };

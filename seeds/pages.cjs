@@ -20,20 +20,20 @@ const seedDB = async () => {
 
   const pages = await Page.insertMany([
     {
-      slug: faker.lorem.slug(),
-      title: faker.lorem.words(3),
+      slug: "tos",
+      title: "Terms of Service",
       content: faker.lorem.paragraphs(3),
       createdAt: faker.date.past(),
     },
     {
-      slug: faker.lorem.slug(),
-      title: faker.lorem.words(3),
+      slug: "privacy-policy",
+      title: "Privacy Policy",
       content: faker.lorem.paragraphs(3),
       createdAt: faker.date.past(),
     },
     {
-      slug: faker.lorem.slug(),
-      title: faker.lorem.words(3),
+      slug: "user-data-deletion",
+      title: "User Data Deletion",
       content: faker.lorem.paragraphs(3),
       createdAt: faker.date.past(),
     },

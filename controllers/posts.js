@@ -136,6 +136,7 @@ module.exports.showPost = async (req, res) => {
         .limit(15)
         .sort({ body: "asc" });
 
+      res.locals.title = post.title;
       res.render("posts/show", { post, tags, popularTags, currUser });
     }
   } catch (e) {
@@ -255,5 +256,7 @@ module.exports.downvotePost = async (req, res) => {
 module.exports.taggedPosts = async (req, res) => {
   const posts = await Post.find({ tags: { $in: [req.params.tag] } });
   const popularTags = await getPopularTags();
+
+  res.locals.title = `Memes Tagged: ${req.params.tag}`;
   res.render("posts/index", { posts, popularTags });
 };
