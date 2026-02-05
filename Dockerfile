@@ -8,8 +8,8 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /srv/app
 
 RUN corepack enable && \
-    corepack prepare --activate pnpm@latest && \
-    pnpm config -g set store-dir ~/.pnpm-store
+    corepack prepare --activate pnpm@10.9.3 && \
+    pnpm config -g set store-dir /root/.pnpm-store
 
 # Deps stage, preserve dependencies in cache as long as the lockfile isn't changed
 FROM builder_base AS deps
