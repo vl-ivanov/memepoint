@@ -14,4 +14,15 @@ router.get(
   },
 );
 
+router.get("/facebook", passport.authenticate("facebook"));
+router.get(
+  "/facebook/callback",
+  passport.authenticate("facebook", { failureRedirect: "/login" }),
+  (req, res) => {
+    const redirectUrl = req.session.requestedUrl || "/";
+    delete req.session.requestedUrl;
+    res.redirect(redirectUrl);
+  },
+);
+
 module.exports = router;

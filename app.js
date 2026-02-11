@@ -89,9 +89,11 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
-  res.locals.gravatar = getGravatarUrl(req.user ? req.user.email : "", {
-    s: 100,
-  });
+  res.locals.gravatar = req.user?.image
+    ? req.user.image
+    : getGravatarUrl(req.user ? req.user.email : "", {
+        s: 100,
+      });
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   next();
