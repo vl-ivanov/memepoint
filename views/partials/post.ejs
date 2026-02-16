@@ -42,6 +42,14 @@
                             <span class="downvote-value" id="<%=post._id%>downspan"><%=post.downvoteNum ?? 0%></span>
                         </button>
                     </form>
+                    <form class="approve-form d-inline" data-id="<%=post._id%>">
+                        <button class="btn btn-success btn-approve" type="submit" id="<%=post._id%>approvebtn">
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                    <button class="btn btn-danger btn-delete" data-id="<%=post._id%>">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
                 <% } else { %>
                     <form class="upvote-form d-inline" data-id="<%=post._id%>" data-toggle="tooltip" data-placement="bottom" title="gotta login to vote">
                         <button class="btn btn-secondary btn-upvote disabled" type="submit">&#10224;

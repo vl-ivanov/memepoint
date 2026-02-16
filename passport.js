@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
+const RememberMeStrategy = require("passport-remember-me").Strategy;
+const LocalStrategy = require("passport-local");
 const User = require("./models/user");
+const Token = require("./models/token");
+const utils = require("./helpers/utils");
 
 module.exports = function (passport) {
   passport.use(
@@ -17,11 +21,19 @@ module.exports = function (passport) {
           username: profile.displayName,
           image: profile.photos[0].value,
           email: profile.emails?.[0]?.value,
+          role:
+            profile.emails?.[0]?.value == process.env.ADMIN_EMAIL
+              ? "admin"
+              : "user",
         };
+
+        console.log(profile);
 
         try {
           let user = await User.findOne({ googleId: profile.id });
           if (user) {
+            user.googleId = newUser.googleId;
+            await user.save();
             done(null, user);
           } else {
             user = await User.create(newUser);
@@ -43,15 +55,21 @@ module.exports = function (passport) {
         profileFields: ["id", "email", "name", "picture"],
       },
       async (accessToken, refreshToken, profile, done) => {
-        const userData = {
+        const newUser = {
           facebookId: profile.id,
-          username: profile.name,
+          username: profile.name.givenName + " " + profile.name.familyName,
           image: profile.photos[0].value,
+          email: profile.emails[0].value,
+          role:
+            profile.emails?.[0]?.value == process.env.ADMIN_EMAIL
+              ? "admin"
+              : "user",
         };
-
         try {
-          let user = await User.findOne({ facebookId: userData.facebookId });
+          let user = await User.findOne({ facebookId: newUser.facebookId });
           if (user) {
+            user.facebookId = newUser.facebookId;
+            await user.save();
             done(null, user);
           } else {
             user = await User.create(newUser);
@@ -64,13 +82,26 @@ module.exports = function (passport) {
     ),
   );
 
-  passport.serializeUser((user, done) => {
-    done(null, user.id);
-  });
+  passport.use(new LocalStrategy(User.authenticate()));
 
-  passport.deserializeUser((id, done) => {
-    User.findById(id)
-      .then((user) => done(null, user))
-      .catch((e) => done(e, false));
-  });
+  passport.use(
+    new RememberMeStrategy(
+      // Verify callback: consumes the token and returns the user
+      function (token, done) {
+        Token.consume(token, function (err, user) {
+          if (err) return done(err);
+          if (!user) return done(null, false);
+          return done(null, user);
+        });
+      },
+      // Issue callback: generates a new token
+      function (user, done) {
+        const token = utils.generateToken(64);
+        Token.save(token, { userId: user.id }, function (err) {
+          if (err) return done(err);
+          return done(null, token);
+        });
+      },
+    ),
+  );
 };

@@ -42,6 +42,28 @@ $(document).ready(function () {
 });
 
 function alwaysOn() {
+  $(Document).on("click", ".btn-delete", function (e) {
+    e.preventDefault();
+
+    if (!confirm("Are you sure you want to delete this post?")) {
+      return;
+    }
+
+    const $btn = $(e.currentTarget);
+    const postId = $btn.data("id").trim();
+
+    $.ajax({
+      url: `/posts/${postId}`,
+      method: "DELETE",
+      success: function (data) {
+        $btn.closest(".card").remove();
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        console.log("something went wrong", errorThrown);
+      },
+    });
+  });
+
   $(document).on("submit", ".upvote-form", function (e) {
     e.preventDefault();
     const $form = $(e.currentTarget);

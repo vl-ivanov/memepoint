@@ -20,7 +20,9 @@ module.exports.index = async (req, res) => {
     page = 100;
   }
 
-  const posts = await Post.find({})
+  const posts = await Post.find(
+    req.user?.role !== "admin" ? { adminApproved: true } : {},
+  )
     .sort()
     .sort({ createdAt: "desc" })
     .populate("tags")
@@ -36,7 +38,9 @@ module.exports.getMorePosts = async (req, res) => {
 
   page = parseInt(page, 10) || 1;
 
-  const posts = await Post.find()
+  const posts = await Post.find(
+    req.user?.role !== "admin" ? { adminApproved: true } : {},
+  )
     .sort()
     .sort({ createdAt: "desc" })
     .populate("tags")
@@ -97,6 +101,8 @@ module.exports.createPost = async (req, res) => {
   tags = [...new Set(tags)]; // Remove duplicates
   post.tags = tags;
 
+  post.adminApproved = req.user.role === "admin";
+
   await post.save();
 
   // Update Tag collection for statistics/autocomplete
@@ -127,7 +133,7 @@ module.exports.showPost = async (req, res) => {
           path: "author",
         },
       });
-    if (!post) {
+    if (!post || (!post.adminApproved && req.user.role !== "admin")) {
       res.render("errors/404");
     } else {
       const currUser = req.user;
@@ -177,21 +183,21 @@ module.exports.updatePost = async (req, res) => {
 };
 
 module.exports.deletePost = async (req, res) => {
-  const post = await Post.findById(req.params.id);
+  const postId = req.params.id;
+  const post = await Post.findById(postId);
   if (!post) {
-    res.render("errors/404");
+    res.status(404).send("Post not found");
   } else {
-    for (let tag_id of post.tags) {
-      var tag = await Tag.findById(tag_id);
+    for (let tagName of post.tags) {
+      var tag = await Tag.findOne({ name: tagName });
       tag.countNum--;
       await tag.save();
     }
     for (let image of post.images) {
-      await backblaze().destroy(image.fileId, image.filename);
+      await backblaze().destroy(image.fileId, image.fileName);
     }
     await Post.findByIdAndDelete(req.params.id);
-    req.flash("success", "Post deleted!");
-    res.redirect(`/posts`);
+    res.status(200).send("Post deleted!");
   }
 };
 

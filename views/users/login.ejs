@@ -1,8 +1,8 @@
 <% layout('layout/boilerplate')%>
 
 <div class="container d-flex justify-content-center align-items-center h-100">
-    <div class="row">
-        <div class="col-12">
+    <div class="row w-100">
+        <div class="col-6 mx-auto">
             <div class="card shadow">
                 <div class="card-body">
                     <h5 class="card-title text-center">Login</h5>
@@ -28,6 +28,14 @@
                                 Password can't be blank
                             </div>
                         </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="remember-me" name="remember-me">
+                                <label class="form-check-label" for="remember-me">
+                                    Remember me
+                                </label>
+                            </div>
+                        </div>
                         <button class="btn btn-success w-100">Login</button>
                         <a class="btn w-100 text-light my-2" id="btn-login-google" href="/auth/google">
                             <i class="fa fa-google"></i> Login with Google
@@ -36,7 +44,7 @@
                             <i class="fa fa-facebook-f"></i> Login with Facebook
                         </a>
                     </form>
-                    <p class="text-center mt-3">Don't have an account? <a href="/register" class="text-decoration-none">Create an Account</a></p>
+                    <p class="text-center mt-3">Don't have an account? <a href="/users/register" class="text-decoration-none">Create an Account</a></p>
                 </div>
             </div>
         </div>

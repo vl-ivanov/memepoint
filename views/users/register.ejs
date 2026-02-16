@@ -1,11 +1,11 @@
 <% layout('layout/boilerplate')%>
-<div class="container d-flex justify-content-center align-items-center h-100 w-100">
-    <div class="row">
-        <div class="col-12">
+<div class="container d-flex justify-content-center align-items-center h-100">
+    <div class="row w-100">
+        <div class="col-6 mx-auto">
             <div class="card shadow">
                 <div class="card-body">
                     <h5 class="card-title text-center">Register</h5>
-                    <form action="/register" method="POST" class="form-validation" novalidate>
+                    <form action="/users/register" method="POST" class="form-validation" novalidate>
                         <div class="mb-3">
                             <label class="form-label" for="username">Username</label>
                             <input class="form-control" type="text" id="username" name="username" required autofocus>
@@ -36,7 +36,7 @@
                                 Password can't be blank
                             </div>
                         </div>
-                        <button class="btn btn-success btn-block">Register</button>
+                        <button class="btn btn-success btn-block w-100">Register</button>
                     </form>
                     <p class="text-center mt-3">Have an account? <a href="/users/login" class="text-decoration-none">Login</a></p>
                 </div>

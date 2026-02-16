@@ -11,9 +11,9 @@
                 <% if(!currentUser) { %>
                     <a class="btn btn-primary" href="/users/login">Login</a>
                     <br />
-                    <small>Don't have an account? <a href="/register">Register</a></small>
+                    <small>Don't have an account? <a href="/users/register">Register</a></small>
                 <% } else { %>
-                    <a href="/profile">Welcome, <%=currentUser.username.toUpperCase() %></a><br />
+                    <a href="/users/profile">Welcome, <%=currentUser.username.toUpperCase() %></a><br />
                     <a class="btn btn-primary" href="/users/logout">Logout</a>
                 <% } %>
             </div>

@@ -76,8 +76,9 @@ BackblazeStorage.prototype._removeFile = function _removeFile(req, file, cb) {
     });
 };
 
-BackblazeStorage.prototype.destroy = function destroy(fileId, fileName) {
-  return b2.deleteFileVersion({
+BackblazeStorage.prototype.destroy = async function destroy(fileId, fileName) {
+  await b2.authorize();
+  return await b2.deleteFileVersion({
     fileId,
     fileName,
     // ...common arguments (optional)

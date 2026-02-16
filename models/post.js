@@ -27,6 +27,7 @@ const PostSchema = new Schema({
   downvote: [{ type: Schema.Types.ObjectId, ref: "User" }],
   upvoteNum: Number,
   downvoteNum: Number,
+  adminApproved: { type: Boolean, default: false },
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   createdAt: { type: Date, default: Date.now },
 });

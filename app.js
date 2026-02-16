@@ -7,13 +7,11 @@ const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 const moment = require("moment");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const flash = require("@stz184/connect-flash");
 const mongoose = require("mongoose");
 const passport = require("passport");
-const LocalStrategy = require("passport-local");
 const crypto = require("crypto");
-
-require("./passport")(passport);
 
 const dbUrl = process.env.DB_URL || "";
 
@@ -77,13 +75,14 @@ const sessionConfig = {
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
 };
+app.use(cookieParser());
 app.use(session(sessionConfig));
 app.use(flash());
-
+require("./passport")(passport);
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(passport.authenticate("remember-me"));
 
-passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
