@@ -151,9 +151,14 @@ module.exports.showPost = async (req, res) => {
 };
 
 module.exports.randomPost = async (req, res) => {
-  const postsCount = await Post.estimatedDocumentCount();
-  const random = Math.floor(Math.random() * postsCount);
-  const post = await Post.findOne().skip(random);
+  const randomPost = await Post.aggregate([
+    { $match: { adminApproved: true } }, // your filters here
+    { $sample: { size: 1 } },
+  ]);
+
+  // randomDoc is an array, so access [0]
+  const post = randomPost[0];
+
   if (!post) {
     res.render("errors/404");
     return;
@@ -183,8 +188,7 @@ module.exports.updatePost = async (req, res) => {
 };
 
 module.exports.deletePost = async (req, res) => {
-  const postId = req.params.id;
-  const post = await Post.findById(postId);
+  const post = req.post;
   if (!post) {
     res.status(404).send("Post not found");
   } else {
@@ -204,7 +208,11 @@ module.exports.deletePost = async (req, res) => {
 module.exports.upvotePost = async (req, res) => {
   const post = await Post.findById(req.params.id);
   if (!post) {
-    res.render("errors/404");
+    res
+      .status(404)
+      .header("Content-Type", "application/json")
+      .send({ error: "Post not found" })
+      .end();
   } else {
     const upvoted = await Post.find({
       _id: req.params.id,
@@ -227,13 +235,26 @@ module.exports.upvotePost = async (req, res) => {
       post.upvote.push(req.user._id);
     }
     post.save();
+    res
+      .status(200)
+      .header("Content-Type", "application/json")
+      .send({
+        message: "Post upvoted!",
+        upvoteNum: post.upvoteNum,
+        downvoteNum: post.downvoteNum,
+      })
+      .end();
   }
 };
 
 module.exports.downvotePost = async (req, res) => {
   const post = await Post.findById(req.params.id);
   if (!post) {
-    res.render("errors/404");
+    res
+      .status(404)
+      .header("Content-Type", "application/json")
+      .send({ error: "Post not found" })
+      .end();
   } else {
     const upvoted = await Post.find({
       _id: req.params.id,
@@ -256,6 +277,15 @@ module.exports.downvotePost = async (req, res) => {
       post.downvote.push(req.user._id);
     }
     post.save();
+    res
+      .status(200)
+      .header("Content-Type", "application/json")
+      .send({
+        message: "Post downvoted!",
+        upvoteNum: post.upvoteNum,
+        downvoteNum: post.downvoteNum,
+      })
+      .end();
   }
 };
 
@@ -265,4 +295,23 @@ module.exports.taggedPosts = async (req, res) => {
 
   res.locals.title = `Memes Tagged: ${req.params.tag}`;
   res.render("posts/index", { posts, popularTags });
+};
+
+module.exports.approvePost = async (req, res) => {
+  const post = req.post;
+  if (!post) {
+    res
+      .status(404)
+      .header("Content-Type", "application/json")
+      .send({ error: "Post not found" })
+      .end();
+  } else {
+    post.adminApproved = true;
+    await post.save();
+    res
+      .status(200)
+      .header("Content-Type", "application/json")
+      .send({ message: "Post approved!" })
+      .end();
+  }
 };

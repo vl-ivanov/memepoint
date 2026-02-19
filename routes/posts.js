@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const posts = require("../controllers/posts");
-const { isLoggedIn } = require("../middleware");
+const { isLoggedIn, isAdminOrPostOwner } = require("../middleware");
 const multer = require("multer");
 const b2storage = require("../helpers/backblaze-b2/index");
 const upload = multer({ storage: b2storage() });
@@ -24,9 +24,15 @@ router
   .route("/posts/:id")
   .get(posts.showPost)
   .put(isLoggedIn, posts.updatePost)
-  .delete(isLoggedIn, posts.deletePost);
+  .delete(isLoggedIn, isAdminOrPostOwner, posts.deletePost);
 
 router.put("/posts/:id/vote-up", isLoggedIn, posts.upvotePost);
 router.put("/posts/:id/vote-down", isLoggedIn, posts.downvotePost);
+router.put(
+  "/posts/:id/approve",
+  isLoggedIn,
+  isAdminOrPostOwner,
+  posts.approvePost,
+);
 
 module.exports = router;

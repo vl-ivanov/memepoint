@@ -42,7 +42,21 @@ $(document).ready(function () {
 });
 
 function alwaysOn() {
-  $(Document).on("click", ".btn-delete", function (e) {
+  const errorCallback = function (jqXHR, textStatus, errorThrown) {
+    // parse the response as json
+    const response = JSON.parse(jqXHR.responseText);
+    if (response.error) {
+      alert(response.error);
+    } else if (response.redirect) {
+      window.location.href = response.redirect;
+    } else if (response.message) {
+      alert(response.message);
+    } else {
+      alert("Something went wrong");
+    }
+  };
+
+  $(document).on("click", ".btn-delete", function (e) {
     e.preventDefault();
 
     if (!confirm("Are you sure you want to delete this post?")) {
@@ -58,81 +72,60 @@ function alwaysOn() {
       success: function (data) {
         $btn.closest(".card").remove();
       },
-      error: function (jqXHR, textStatus, errorThrown) {
-        console.log("something went wrong", errorThrown);
-      },
+      error: errorCallback,
     });
   });
 
-  $(document).on("submit", ".upvote-form", function (e) {
+  $(document).on("click", ".btn-approve", function (e) {
     e.preventDefault();
-    const $form = $(e.currentTarget);
-    const postId = $form.data("id").trim();
-    const btnId = $form.find("input[type=submit]:focus").prevObject[0][0].id;
-    const upSpan = $form.find("span");
-    const downSpan = $(".downvote-form").find(`span[id=${postId}downspan]`);
 
-    let upvoteNum = parseInt(upSpan.text());
-    let downvoteNum = parseInt(downSpan.text());
-
-    if ($("#" + postId + "upbtn").hasClass("btn-primary")) upvoteNum--;
-    else upvoteNum++;
-
-    if ($("#" + postId + "downbtn").hasClass("btn-primary")) {
-      $("#" + postId + "downbtn").toggleClass("btn-primary btn-secondary");
-      downvoteNum--;
-    }
-
-    $("#" + btnId).toggleClass("btn-primary btn-secondary");
-
-    upSpan.text(upvoteNum);
-    downSpan.text(downvoteNum);
-
-    let url = postId + "/vote-up";
-    if (!window.location.href.includes("posts/" + postId)) {
-      url = "posts/" + postId + "/vote-up";
-    }
+    const $btn = $(e.currentTarget);
+    const postId = $btn.data("id").trim();
 
     $.ajax({
-      type: "PUT",
-      url: url,
+      url: `/posts/${postId}/approve`,
+      method: "PUT",
+      success: function (data) {
+        alert("Post approved!");
+        $btn.remove();
+      },
+      error: errorCallback,
     });
   });
 
-  $(document).on("submit", ".downvote-form", function (e) {
+  $(document).on("click", ".btn-upvote", function (e) {
     e.preventDefault();
-    const $form = $(e.currentTarget);
-    const postId = $form.data("id").trim();
-    const btnId = $form.find("input[type=submit]:focus").prevObject[0][0].id;
-    const upSpan = $(".upvote-form").find(`span[id=${postId}upspan]`);
-    const downSpan = $form.find("span");
 
-    let upvoteNum = parseInt(upSpan.text());
-    let downvoteNum = parseInt(downSpan.text());
+    const $btn = $(e.currentTarget);
+    const postId = $btn.data("id").trim();
 
-    if ($("#" + postId + "downbtn").hasClass("btn-primary")) downvoteNum--;
-    else downvoteNum++;
+    $.ajax({
+      url: `/posts/${postId}/vote-up`,
+      method: "PUT",
+      dataType: "json",
+      success: function (data) {
+        $(`span[id=${postId}-upvotes-count]`).text(data.upvoteNum);
+        $(`span[id=${postId}-downvotes-count]`).text(data.downvoteNum);
+      },
+      error: errorCallback,
+    });
+  });
 
-    if ($("#" + postId + "upbtn").hasClass("btn-primary")) {
-      $("#" + postId + "upbtn").toggleClass("btn-primary btn-secondary");
-      upvoteNum--;
-    }
+  $(document).on("click", ".btn-downvote", function (e) {
+    e.preventDefault();
 
-    $("#" + btnId).toggleClass("btn-primary btn-secondary");
+    const $btn = $(e.currentTarget);
+    const postId = $btn.data("id").trim();
 
-    upSpan.text(upvoteNum);
-    downSpan.text(downvoteNum);
-
-    if (window.location.href.includes("posts/" + postId)) {
-      $.ajax({
-        type: "PUT",
-        url: postId + "/vote-down",
-      });
-    } else {
-      $.ajax({
-        type: "PUT",
-        url: "posts/" + postId + "/vote-down",
-      });
-    }
+    $.ajax({
+      url: `/posts/${postId}/vote-down`,
+      method: "PUT",
+      dataType: "json",
+      success: function (data) {
+        $(`span[id=${postId}-upvotes-count]`).text(data.upvoteNum);
+        $(`span[id=${postId}-downvotes-count]`).text(data.downvoteNum);
+      },
+      error: errorCallback,
+    });
   });
 }

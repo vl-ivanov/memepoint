@@ -22,31 +22,9 @@
                             <% }) %>
                         </div>
                     </div>
-
-                    <form class="upvote-form d-inline" data-id="<%=post._id%>" <%-(currentUser ? '' : 'data-toggle="tooltip" data-placement="bottom" title="gotta login to vote"')%>>
-                        <button
-                            class="btn btn-primary btn-upvote <%=(!currentUser || post.upvote.includes(currentUser._id) ? 'disabled' : '')%>"
-                            type="submit"
-                            id="<%=post._id%>upbtn"
-                        >
-                            <i class="fa fa-thumbs-up" aria-hidden="true"></i>
-                            <span class="upvote-value" id="<%=post._id%>upspan"><%=post.upvoteNum ?? 0%></span>
-                        </button>
-                    </form>
-                    <form class="downvote-form d-inline" data-id="<%=post._id%>">
-                        <button class="btn btn-secondary btn-downvote <%=(!currentUser || post.downvote.includes(currentUser._id) ? 'disabled' : '')%>" type="submit" id="<%=post._id%>downbtn">
-                            <i class="fa fa-thumbs-down" aria-hidden="true"></i>
-                            <span class="downvote-value" id="<%=post._id%>downspan"><%=post.downvoteNum ?? 0%></span>
-                        </button>
-                    </form>
-
-                    <% if(currentUser && currentUser._id.equals(post.author._id)) { %>
-                    <a class="card-link btn btn-info" style="color: white;"
-                        href="/posts/<%=post._id%>/edit">Edit</a>
-                    <form class="d-inline" action="/posts/<%=post._id%>?_method=DELETE" method="POST">
-                        <button class="btn btn-danger">Delete</button>
-                    </form>
-                    <% } %>
+                    <!-- buttons -->
+                    <%- include('../partials/post-buttons.ejs', { post, currentUser }) -%>
+                    <!-- buttons -->
                 </div>
             </div>
         </div>

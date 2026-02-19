@@ -25,8 +25,8 @@ const PostSchema = new Schema({
   tags: [String], // ← Changed to array of strings!
   upvote: [{ type: Schema.Types.ObjectId, ref: "User" }],
   downvote: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  upvoteNum: Number,
-  downvoteNum: Number,
+  upvoteNum: { type: Number, default: 0 },
+  downvoteNum: { type: Number, default: 0 },
   adminApproved: { type: Boolean, default: false },
   comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   createdAt: { type: Date, default: Date.now },

@@ -1,0 +1,56 @@
+<button
+    class="btn btn-primary btn-upvote"
+    type="button"
+    data-id="<%=post._id%>"
+    data-toggle="tooltip"
+    data-placement="bottom"
+    title="Vote up"
+    <%=(currentUser && !post.upvote.includes(currentUser._id) ? '' : 'disabled')%>
+>
+    <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+    <span class="downvote-value" id="<%=post._id%>-upvotes-count"><%=post.upvoteNum ?? 0%></span>
+</button>
+
+<button
+    class="btn btn-secondary btn-downvote"
+    type="button"
+    data-id="<%=post._id%>"
+    data-toggle="tooltip"
+    data-placement="bottom"
+    data-tofrom="downvote"
+    title="Vote down"
+    <%=(currentUser && !post.downvote.includes(currentUser._id) ? '' : 'disabled')%>
+>
+    <i class="fa fa-thumbs-down" aria-hidden="true"></i>
+    <span class="downvote-value" id="<%=post._id%>-downvotes-count"><%=post.downvoteNum ?? 0%></span>
+</button>
+
+<% if(currentUser?.role === 'admin' && !post.adminApproved) { %>
+<button
+    class="btn btn-success btn-approve"
+    type="button"
+    data-id="<%=post._id%>"
+    data-toggle="tooltip"
+    data-placement="bottom"
+    title="Approve post"
+    <%=(currentUser ? '' : 'disabled')%>
+>
+    <i class="fa fa-check" aria-hidden="true"></i>
+</button>
+<% } %>
+<% if(currentUser && (post.author.toString() === currentUser._id.toString() || currentUser.role === 'admin')) { %>
+<button
+    class="btn btn-danger btn-delete"
+    type="button"
+    data-id="<%=post._id%>"
+    data-toggle="tooltip"
+    data-placement="bottom"
+    title="Delete post"
+    <%=(currentUser ? '' : 'disabled')%>
+>
+    <i class="fa fa-times" aria-hidden="true"></i>
+</button>
+<% } %>
+<% if (!currentUser) { %>
+<span class="tooltip-left">You have to login to vote</span>
+<% } %>

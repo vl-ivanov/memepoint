@@ -1,0 +1,15 @@
+[
+  {
+    "label": "Attach to Node",
+    "adapter": "JavaScript",
+    "request": "attach",
+    "port": 9909,
+    "type": "pwa-node",
+    "localRoot": "$ZED_WORKTREE_ROOT",
+    "remoteRoot": "/srv/app",
+    "resolveSourceMapLocations": [
+      "${workspaceFolder}/**",
+      "!**/node_modules/**",
+    ],
+  },
+]
