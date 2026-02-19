@@ -7,6 +7,7 @@ const ejsMate = require("ejs-mate");
 const methodOverride = require("method-override");
 const moment = require("moment");
 const session = require("express-session");
+const MongoStore = require("connect-mongo").default;
 const cookieParser = require("cookie-parser");
 const flash = require("@stz184/connect-flash");
 const mongoose = require("mongoose");
@@ -74,6 +75,10 @@ const sessionConfig = {
     expires: Date.now() + 1000 * 60 * 60 * 24 * 7, // 1 week cookie
     maxAge: 1000 * 60 * 60 * 24 * 7,
   },
+  store: MongoStore.create({
+    mongoUrl: dbUrl,
+    touchAfter: 24 * 60 * 60,
+  }),
 };
 app.use(cookieParser());
 app.use(session(sessionConfig));
