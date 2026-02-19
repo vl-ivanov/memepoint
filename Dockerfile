@@ -8,7 +8,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /srv/app
 
 RUN corepack enable && \
-    corepack prepare --activate pnpm@10.9.3 && \
+    corepack prepare --activate pnpm@10.30.0 && \
     pnpm config -g set store-dir /root/.pnpm-store
 
 # Deps stage, preserve dependencies in cache as long as the lockfile isn't changed
@@ -33,5 +33,9 @@ CMD ["sh", "-c", "pnpm install -r --offline; pnpm start"]
 # Production image, copy all the files
 FROM node:22-alpine AS prod
 
+COPY --from=deps /srv/app/ .
+EXPOSE 8030
+ENV PORT 8030
+
 ENV NODE_ENV production
-CMD [ "pnpm", "run", "prod" ]
+CMD ["sh", "-c", "pnpm install -r --offline; pnpm run prod"]
