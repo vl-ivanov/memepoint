@@ -26,6 +26,7 @@ FROM deps as dev
 
 EXPOSE 8030
 ENV PORT 8030
+
 ENV NODE_ENV development
 
 CMD ["sh", "-c", "pnpm install -r --offline; pnpm start"]
@@ -34,8 +35,10 @@ CMD ["sh", "-c", "pnpm install -r --offline; pnpm start"]
 FROM node:22-alpine AS prod
 
 COPY --from=deps /srv/app/ .
+
 EXPOSE 8030
 ENV PORT 8030
 
 ENV NODE_ENV production
+
 CMD ["sh", "-c", "pnpm install -r --offline; pnpm run prod"]
