@@ -3,6 +3,16 @@ const Tag = require("../models/tag");
 const backblaze = require("../helpers/backblaze-b2");
 const { getPublicUrl } = require("../helpers/backblaze-b2/helper");
 
+function getFilterQuery(req) {
+  const query = req.query.q
+    ? { title: { $regex: req.query.q, $options: "i" } }
+    : {};
+  if (req.user?.role !== "admin") {
+    query.adminApproved = true;
+  }
+  return query;
+}
+
 async function getPopularTags() {
   return await Tag.find({})
     .sort({ countNum: "desc" })
@@ -20,9 +30,8 @@ module.exports.index = async (req, res) => {
     page = 100;
   }
 
-  const posts = await Post.find(
-    req.user?.role !== "admin" ? { adminApproved: true } : {},
-  )
+  const query = getFilterQuery(req);
+  const posts = await Post.find(query)
     .sort()
     .sort({ createdAt: "desc" })
     .populate("tags")
@@ -38,9 +47,8 @@ module.exports.getMorePosts = async (req, res) => {
 
   page = parseInt(page, 10) || 1;
 
-  const posts = await Post.find(
-    req.user?.role !== "admin" ? { adminApproved: true } : {},
-  )
+  const query = getFilterQuery(req);
+  const posts = await Post.find(query)
     .sort()
     .sort({ createdAt: "desc" })
     .populate("tags")
