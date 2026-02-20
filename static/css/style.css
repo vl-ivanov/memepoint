@@ -174,3 +174,7 @@ li {
     border-style: solid;
     border-color: transparent #333 transparent transparent;
 }
+
+#posts-container {
+    max-width: 800px;
+}
