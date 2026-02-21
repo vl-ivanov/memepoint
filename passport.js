@@ -21,17 +21,23 @@ module.exports = function (passport) {
           username: profile.displayName,
           image: profile.photos[0].value,
           email: profile.emails?.[0]?.value,
-          role:
-            profile.emails?.[0]?.value == process.env.ADMIN_EMAIL
-              ? "admin"
-              : "user",
+          role: process.env.ADMIN_EMAIL.split(",").includes(
+            profile.emails?.[0]?.value,
+          )
+            ? "admin"
+            : "user",
         };
 
         try {
           let user = await User.findOne({ googleId: profile.id });
           if (user) {
             user.googleId = newUser.googleId;
-            await user.save();
+            role: (process.env.ADMIN_EMAIL.split(",").includes(
+              profile.emails?.[0]?.value,
+            )
+              ? "admin"
+              : "user",
+              await user.save());
             done(null, user);
           } else {
             user = await User.create(newUser);
