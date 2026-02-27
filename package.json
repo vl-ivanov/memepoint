@@ -11,6 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@sentry/node": "^10.40.0",
+    "@sentry/tracing": "^7.120.4",
     "@stz184/backblaze-b2": "^2.0.5",
     "@stz184/connect-flash": "^1.0.2",
     "connect-mongo": "^6.0.0",

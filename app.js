@@ -13,6 +13,8 @@ const flash = require("@stz184/connect-flash");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const crypto = require("crypto");
+const sentry = require("./sentry.js");
+sentry.init(app);
 
 const dbUrl = process.env.DB_URL || "";
 
