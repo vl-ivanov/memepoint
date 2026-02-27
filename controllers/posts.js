@@ -141,7 +141,12 @@ module.exports.showPost = async (req, res) => {
           path: "author",
         },
       });
-    if (!post || (!post.adminApproved && req.user.role !== "admin")) {
+    if (
+      !post ||
+      (!post.adminApproved &&
+        req.user.role !== "admin" &&
+        !req.user._id.equals(post.author._id))
+    ) {
       res.render("errors/404");
     } else {
       const currUser = req.user;

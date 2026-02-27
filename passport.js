@@ -21,16 +21,22 @@ module.exports = function (passport) {
           username: profile.displayName,
           image: profile.photos[0].value,
           email: profile.emails?.[0]?.value,
-          role:
-            profile.emails?.[0]?.value == process.env.ADMIN_EMAIL
-              ? "admin"
-              : "user",
+          role: process.env.ADMIN_EMAIL.split(/\s*,\s*/).includes(
+            profile.emails?.[0]?.value,
+          )
+            ? "admin"
+            : "user",
         };
 
         try {
           let user = await User.findOne({ googleId: profile.id });
           if (user) {
             user.googleId = newUser.googleId;
+            user.role = process.env.ADMIN_EMAIL.split(/\s*,\s*/).includes(
+              profile.emails?.[0]?.value,
+            )
+              ? "admin"
+              : "user";
             await user.save();
             done(null, user);
           } else {
@@ -58,15 +64,21 @@ module.exports = function (passport) {
           username: profile.name.givenName + " " + profile.name.familyName,
           image: profile.photos[0].value,
           email: profile.emails[0].value,
-          role:
-            profile.emails?.[0]?.value == process.env.ADMIN_EMAIL
-              ? "admin"
-              : "user",
+          role: process.env.ADMIN_EMAIL.split(/\s*,\s*/).includes(
+            profile.emails?.[0]?.value,
+          )
+            ? "admin"
+            : "user",
         };
         try {
           let user = await User.findOne({ facebookId: newUser.facebookId });
           if (user) {
             user.facebookId = newUser.facebookId;
+            user.role = process.env.ADMIN_EMAIL.split(/\s*,\s*/).includes(
+              profile.emails?.[0]?.value,
+            )
+              ? "admin"
+              : "user";
             await user.save();
             done(null, user);
           } else {
