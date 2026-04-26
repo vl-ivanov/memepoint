@@ -10,6 +10,11 @@ module.exports.renderRegister = (req, res) => {
 
 module.exports.register = async (req, res, next) => {
   const { email, username, password } = req.body;
+  if (!email || !username || !password) {
+    req.flash("error", "All fields are required");
+    return res.redirect("/users/register");
+  }
+
   const isExists = await User.find({
     $or: [{ email: email }, { username: username }],
   });

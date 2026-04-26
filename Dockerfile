@@ -3,7 +3,7 @@
 FROM node:22-alpine as builder_base
 
 EXPOSE 8030
-ENV PORT 8030
+ENV PORT=8030
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
@@ -11,31 +11,29 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /srv/app
 
 RUN corepack enable && \
-    corepack prepare --activate pnpm@10.30.2 && \
+    corepack prepare --activate pnpm@latest && \
     pnpm config -g set store-dir /root/.pnpm-store
 
 # Deps stage, preserve dependencies in cache as long as the lockfile isn't changed
 FROM builder_base AS deps
 
-COPY --link pnpm-lock.yaml ./
-RUN pnpm fetch
-
+COPY --link package.json ./
 COPY --link . .
-RUN pnpm install -r --offline
-
+RUN pnpm install
 
 # Development image
-FROM deps as dev
+FROM deps AS dev
 
-ENV NODE_ENV development
+ENV NODE_ENV=development
+COPY --link pnpm-lock.yaml ./
 
 CMD ["sh", "-c", "pnpm install -r --offline; pnpm start"]
 
 # Production image, copy all the files
 FROM builder_base AS prod
 
-COPY --from=deps /srv/app/ .
+ENV NODE_ENV=production
 
-ENV NODE_ENV production
+COPY --from=deps /srv/app/ .
 
 CMD ["sh", "-c", "pnpm install -r --offline; pnpm run prod"]
