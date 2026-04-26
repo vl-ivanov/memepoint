@@ -39,7 +39,8 @@ app.use(helmet({
                 "https://www.gravatar.com",
                 "https://f000.backblazeb2.com",
                 "https://*.googleusercontent.com",
-                "https://stackpath.bootstrapcdn.com"
+                "https://stackpath.bootstrapcdn.com",
+                "https://images.myawesome.meme"
             ],
 
             // Allow styles from your domain and a specific font/service CDN
