@@ -30,7 +30,7 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             // Allow scripts from your domain and a specific CDN
-            scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+            scriptSrc: ["'self'", "https://cdn.jsdelivr.net", "https://matomo.beautybytes.pro"],
 
             // Allow images from your domain, data URIs, and external sources
             imgSrc: [
@@ -40,7 +40,8 @@ app.use(helmet({
                 "https://f000.backblazeb2.com",
                 "https://*.googleusercontent.com",
                 "https://stackpath.bootstrapcdn.com",
-                "https://images.myawesome.meme"
+                "https://images.myawesome.meme",
+                "https://matomo.beautybytes.pro"
             ],
 
             // Allow styles from your domain and a specific font/service CDN
