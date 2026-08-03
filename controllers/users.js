@@ -12,7 +12,7 @@ module.exports.register = async (req, res, next) => {
   const { email, username, password } = req.body;
   if (!email || !username || !password) {
     req.flash("error", "All fields are required");
-    return res.redirect("/users/register");
+    return res.redirect("/login");
   }
 
   const isExists = await User.find({
@@ -21,7 +21,7 @@ module.exports.register = async (req, res, next) => {
 
   if (isExists.length > 0) {
     req.flash("error", "Username / email already exists");
-    return res.redirect("/users/register");
+    return res.redirect("/login");
   }
 
   const newUser = new User({ email, username });

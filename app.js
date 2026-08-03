@@ -13,8 +13,10 @@ const cookieParser = require("cookie-parser");
 const flash = require("@stz184/connect-flash");
 const mongoose = require("mongoose");
 const passport = require("passport");
+const { auth } = require("express-openid-connect");
 const crypto = require("crypto");
 const sentry = require("./sentry.js");
+const openidConfig = require("./openid-config");
 sentry.init(app);
 
 const dbUrl = process.env.DB_URL || "";
@@ -23,6 +25,9 @@ if (!dbUrl) {
   console.error("DB_URL environment variable is not set.");
   process.exit(1);
 }
+
+// Apply the auth middleware
+app.use(auth(openidConfig));
 
 const User = require("./models/user");
 // Generate a nonce for each request
@@ -85,8 +90,6 @@ app.use(function (req, res, next) {
 
 const postRoutes = require("./routes/posts");
 const commentRoutes = require("./routes/comments");
-const userRoutes = require("./routes/users");
-const authRoutes = require("./routes/auths");
 const pageRoutes = require("./routes/pages");
 
 // Helper function to generate Gravatar URL
@@ -143,17 +146,13 @@ const sessionConfig = {
 app.use(cookieParser());
 app.use(session(sessionConfig));
 app.use(flash());
-require("./passport")(passport);
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(passport.authenticate("remember-me"));
-
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
-  res.locals.currentUser = req.user;
-  res.locals.gravatar = req.user?.image
+  res.locals.currentUser = req.oidc.user ? {
+    ...req.oidc.user,
+    username: (req.oidc.user?.email || req.oidc.user?.sub).split("@")[0],
+  } : null;
+  res.locals.gravatar = req.oidc.user?.image
     ? req.user.image
     : getGravatarUrl(req.user ? req.user.email : "", {
         s: 100,
@@ -165,8 +164,6 @@ app.use((req, res, next) => {
 
 app.use("/", postRoutes);
 app.use("/posts/:id/comments", commentRoutes);
-app.use("/auth", authRoutes);
-app.use("/users", userRoutes);
 app.use("/page", pageRoutes);
 
 app.get("/", (req, res) => {

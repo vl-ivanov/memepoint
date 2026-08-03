@@ -17,3 +17,6 @@ build:
 
 seed:
 	docker compose -f docker-compose.yml -f docker-compose.dev.yml exec frontend node seeds/index.js
+
+shell:
+	docker compose -f docker-compose.yml -f docker-compose.dev.yml exec frontend sh
