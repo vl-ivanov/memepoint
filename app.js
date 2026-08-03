@@ -12,7 +12,6 @@ const MongoStore = require("connect-mongo").default;
 const cookieParser = require("cookie-parser");
 const flash = require("@stz184/connect-flash");
 const mongoose = require("mongoose");
-const passport = require("passport");
 const { auth } = require("express-openid-connect");
 const crypto = require("crypto");
 const sentry = require("./sentry.js");
