@@ -4,6 +4,9 @@ FROM node:22-alpine as builder_base
 
 EXPOSE 8030
 ENV PORT=8030
+env PNPM_HOME="/root/.local/share/pnpm"
+env PATH="$PNPM_HOME/bin:$PATH"
+ENV CI=true
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
@@ -19,7 +22,7 @@ FROM builder_base AS deps
 
 COPY --link package.json ./
 COPY --link . .
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 # Development image
 FROM deps AS dev
