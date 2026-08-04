@@ -146,16 +146,40 @@ app.use(cookieParser());
 app.use(session(sessionConfig));
 app.use(flash());
 
-app.use((req, res, next) => {
-  res.locals.currentUser = req.oidc.user ? {
-    ...req.oidc.user,
-    username: (req.oidc.user?.email || req.oidc.user?.sub).split("@")[0],
-  } : null;
+app.use(async (req, res, next) => {
   res.locals.gravatar = req.oidc.user?.image
-    ? req.user.image
-    : getGravatarUrl(req.user ? req.user.email : "", {
+      ? req.user.image
+      : getGravatarUrl(req.user ? req.user.email : "", {
         s: 100,
       });
+
+  res.locals.currentUser = null;
+
+  if (req.oidc.user) {
+    // create user if not exists
+    const newUser = {
+      username: (req.oidc.user?.email || req.oidc.user?.sub).split("@")[0],
+      image: res.locals.gravatar,
+      email: (req.oidc.user?.email || req.oidc.user?.sub),
+      role: process.env.ADMIN_EMAIL.split(/\s*,\s*/).includes(
+          (req.oidc.user?.email || req.oidc.user?.sub),
+      ) ? "admin" : "user",
+    };
+
+    try {
+      let user = await User.findOne({email: newUser.email});
+      if (user) {
+        user.role = process.env.ADMIN_EMAIL.split(/\s*,\s*/).includes(newUser.email) ? "admin" : "user";
+        await user.save();
+      } else {
+        user = await User.create(newUser);
+      }
+      res.locals.currentUser = user;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
   next();
