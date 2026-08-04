@@ -1,17 +1,19 @@
 const Post = require("./models/post");
 
+const oidc = require("./oidc.js");
+
 module.exports.isLoggedIn = (req, res, next) => {
-  if (!req.isAuthenticated()) {
+  if (!oidc.isAuthenticated(req)) {
     req.session.requestedUrl = req.originalUrl;
     req.flash("error", "You have to login first");
     // check if it is an ajax request
     if (req.xhr) {
       return res.json({
         error: "You have to login first",
-        redirect: "/users/login",
+        redirect: "/auth/login",
       });
     }
-    return res.redirect("/users/login");
+    return res.redirect("/auth/login");
   }
   next();
 };

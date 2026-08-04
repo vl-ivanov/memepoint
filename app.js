@@ -12,7 +12,7 @@ const MongoStore = require("connect-mongo").default;
 const cookieParser = require("cookie-parser");
 const flash = require("@stz184/connect-flash");
 const mongoose = require("mongoose");
-const passport = require("passport");
+const oidc = require("./oidc.js");
 const crypto = require("crypto");
 const sentry = require("./sentry.js");
 sentry.init(app);
@@ -86,7 +86,6 @@ app.use(function (req, res, next) {
 const postRoutes = require("./routes/posts");
 const commentRoutes = require("./routes/comments");
 const userRoutes = require("./routes/users");
-const authRoutes = require("./routes/auths");
 const pageRoutes = require("./routes/pages");
 
 // Helper function to generate Gravatar URL
@@ -143,13 +142,72 @@ const sessionConfig = {
 app.use(cookieParser());
 app.use(session(sessionConfig));
 app.use(flash());
-require("./passport")(passport);
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(passport.authenticate("remember-me"));
 
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+app.get("/auth/login", async (req, res, next) => {
+  try {
+    await oidc.login(req, res);
+  } catch (err) {
+    req.flash("error", "Login unavailable, please try again");
+    res.redirect("/users/login");
+  }
+});
+
+app.get("/auth/callback", async (req, res, next) => {
+  try {
+    await oidc.callback(req, res);
+  } catch (err) {
+    console.error("OIDC callback error:", err.message);
+    console.error(err);
+    // Miracl returns a fresh user to the redirect_uri after registration,
+    // but the returned code is not yet exchangeable for tokens. In that case
+    // the correct UX is to send the user to the login step.
+    const isRegistration =
+      err.code === "OAUTH_WWW_AUTHENTICATE_CHALLENGE" ||
+      err.message?.toLowerCase().includes("invalid_token") ||
+      err.message?.toLowerCase().includes("invalid_client");
+    if (isRegistration) {
+      req.flash(
+        "success",
+        "Registration complete. Please log in with your new account.",
+      );
+      return res.redirect("/auth/login");
+    }
+    req.flash("error", "Login failed, please try again");
+    res.redirect("/users/login");
+  }
+});
+
+app.use(async (req, res, next) => {
+  const profile = oidc.getProfile(req);
+  if (!profile) {
+    req.user = null;
+    return next();
+  }
+  try {
+    const { sub, email, name, nickname, picture } = profile;
+    const username =
+      nickname || name || (email && email.split("@")[0]) || sub;
+    const isAdmin = process.env.ADMIN_EMAIL
+      ? process.env.ADMIN_EMAIL.split(/\s*,\s*/).includes(email)
+      : false;
+    const user = await User.findOneAndUpdate(
+      { miraclId: sub },
+      {
+        $set: { email, username, image: picture },
+        $setOnInsert: { miraclId: sub, role: isAdmin ? "admin" : "user" },
+      },
+      { upsert: true, new: true, runValidators: true },
+    );
+    if (isAdmin && user.role !== "admin") {
+      user.role = "admin";
+      await user.save();
+    }
+    req.user = user;
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
@@ -165,7 +223,6 @@ app.use((req, res, next) => {
 
 app.use("/", postRoutes);
 app.use("/posts/:id/comments", commentRoutes);
-app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/page", pageRoutes);
 

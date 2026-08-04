@@ -1,21 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const passport = require("passport");
 const { isLoggedIn } = require("../middleware");
 const users = require("../controllers/users");
 
-router.route("/register").get(users.renderRegister).post(users.register);
+router.get("/register", users.renderRegister);
 
-router
-  .route("/login")
-  .get(users.renderLogin)
-  .post(
-    passport.authenticate("local", {
-      failureFlash: true,
-      failureRedirect: "/users/login",
-    }),
-    users.login,
-  );
+router.route("/login").get(users.renderLogin);
 
 router.get("/logout", isLoggedIn, users.logout);
 
