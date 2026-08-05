@@ -1,0 +1,62 @@
+<% layout('layout/boilerplate')%>
+
+<div class="container d-flex justify-content-center align-items-center h-100">
+    <div class="row w-100">
+        <div class="col-md-12 col-lg-6 mx-auto">
+            <div class="card shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Confirming verification...</h5>
+                    <p id="status">Please wait while we verify your email.</p>
+                    <div id="error" class="alert alert-danger d-none" role="alert"></div>
+                    <a href="/" id="home-link" class="btn btn-primary w-100 d-none">Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script nonce="<%= cspNonce %>">
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('user_id');
+    const code = params.get('code');
+
+    function showError(message) {
+        document.getElementById('status').classList.add('d-none');
+        const errorEl = document.getElementById('error');
+        errorEl.textContent = message;
+        errorEl.classList.remove('d-none');
+        document.getElementById('home-link').classList.remove('d-none');
+    }
+
+    if (!userId || !code) {
+        showError('Invalid verification link.');
+        return;
+    }
+
+    const request = new XMLHttpRequest();
+    request.open('POST', window.location.pathname, true);
+    request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    request.onreadystatechange = function() {
+        if (request.readyState !== 4) {
+            return;
+        }
+        if (request.status !== 200) {
+            showError('Verification failed. Please try again or request a new link.');
+            return;
+        }
+        try {
+            const response = JSON.parse(request.responseText);
+            if (!response.verificationRedirectUrl) {
+                throw new Error('Missing verification redirect URL');
+            }
+            window.location.href = response.verificationRedirectUrl;
+        } catch (err) {
+            showError(err.message);
+        }
+    };
+
+    const body = 'userId=' + encodeURIComponent(userId) + '&code=' + encodeURIComponent(code);
+    request.send(body);
+})();
+</script>

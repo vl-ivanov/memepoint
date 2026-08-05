@@ -86,6 +86,7 @@ app.use(function (req, res, next) {
 const postRoutes = require("./routes/posts");
 const commentRoutes = require("./routes/comments");
 const userRoutes = require("./routes/users");
+const verifyRoutes = require("./routes/verify");
 const pageRoutes = require("./routes/pages");
 
 // Helper function to generate Gravatar URL
@@ -224,6 +225,7 @@ app.use((req, res, next) => {
 app.use("/", postRoutes);
 app.use("/posts/:id/comments", commentRoutes);
 app.use("/users", userRoutes);
+app.use("/verify", verifyRoutes);
 app.use("/page", pageRoutes);
 
 app.get("/", (req, res) => {

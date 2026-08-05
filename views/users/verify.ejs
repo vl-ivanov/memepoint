@@ -1,0 +1,29 @@
+<% layout('layout/boilerplate')%>
+
+<div class="container d-flex justify-content-center align-items-center h-100">
+    <div class="row w-100">
+        <div class="col-md-12 col-lg-6 mx-auto">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Verify your email</h5>
+                    <% if (userId) { %>
+                        <p>We need to verify <strong><%= userId %></strong> before you can register.</p>
+                    <% } else { %>
+                        <p>Please enter the email address you want to register.</p>
+                    <% } %>
+                    <form action="/verify" method="POST">
+                        <% if (userId) { %>
+                            <input type="hidden" name="userId" value="<%= userId %>">
+                        <% } else { %>
+                            <div class="mb-3">
+                                <label for="userId" class="form-label">Email address</label>
+                                <input type="email" class="form-control" id="userId" name="userId" required>
+                            </div>
+                        <% } %>
+                        <button class="btn btn-success w-100">Send verification email</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
